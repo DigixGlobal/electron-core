@@ -1,0 +1,28 @@
+# frozen_string_literal: true
+
+module AccountService
+  class RegisterUser
+    include SolidUseCase
+
+    steps :validate_and_save # , :email_confirmation
+
+    def validate_and_save(params)
+      user = User.new(params)
+
+      raise :invalid_data, user.errors unless user.valid?
+      raise :save_data, user.errors if user.save
+
+      continue(user)
+    end
+
+    def email_user(user)
+      UserMailer.async.deliver(:welcome, user.id)
+
+      continue(user)
+    end
+  end
+
+  def self.register_user(attrs)
+    RegisterUser.run(attrs)
+  end
+end
