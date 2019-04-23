@@ -8,18 +8,51 @@ module Mutations
       Once registered, an email is sent to the user's address for the confirmation link.
     EOS
 
-    class UnconfrimedUserType < Types::Base::BaseObject
-      description <<~EOS
-        Electron user who signed up but hasn't confirmed yet.
+    argument :first_name, String,
+             required: true,
+             description: <<~EOS
+               First name of the user.
 
-        The user must confirm the email sent to his address to gain access to the system.
-      EOS
+               Validations:
+               - Maximum of 150 characters
+             EOS
+    argument :last_name, String,
+             required: true,
+             description: <<~EOS
+               Last name of the user.
 
-      field :email, String,
-            null: false,
-            description: 'Email address of the user'
-    end
+               Validations:
+               - Maximum of 150 characters
+             EOS
+    argument :birthdate, Types::Scalar::Date,
+             required: true,
+             description: <<~EOS
+               Birth date of the user.
 
+               Validations:
+               - Must be 18 years or older
+             EOS
+    argument :country_of_residence, Types::Value::CountryValue,
+             required: true,
+             description: <<~EOS
+               Country of the user's country of residence.
+
+               Validations: None
+             EOS
+    argument :citizenship, Types::Value::CountryValue,
+             required: true,
+             description: <<~EOS
+               Country of the user's citizenship.
+
+               Validations: None
+             EOS
+    argument :tnc_version, String,
+             required: true,
+             description: <<~EOS
+               Terms and conditions accepted by the user.
+
+               Validations: None
+             EOS
     argument :email, String,
              required: true,
              description: <<~EOS
@@ -35,13 +68,10 @@ module Mutations
                User's password.
 
                Validations:
-               - Maximum of 254 characters
-               - Must contain a lowercase letter, an uppercase letter and a digit
+               - Minimum of 6 characters
+               - Maximum of 128 characters
              EOS
 
-    field :user, UnconfrimedUserType,
-          null: true,
-          description: 'Newly registered user'
     field :errors, [UserErrorType],
           null: false,
           description: <<~EOS
@@ -53,15 +83,13 @@ module Mutations
 
     KEY = :user
 
-    def resolve(email:, password:)
-      AccountService.register_user(email: email, password: password).match do
-        success do |result|
-          model_result(KEY, result[:user])
-        end
+    def resolve(attrs)
+      result = AccountService.register_user(attrs)
 
-        failure(:invalid_data) do |result|
-          model_errors(KEY, result[:errors])
-        end
+      AppMatcher.result_matcher.call(result) do |m|
+        m.success { |_user| model_result(KEY, nil) }
+        m.failure(:invalid_data) { |errors| model_errors(KEY, errors) }
+        m.failure(:email_not_sent) { |_| form_error(KEY, 'Email not sent') }
       end
     end
   end

@@ -5,15 +5,33 @@ require 'rails_helper'
 RSpec.describe 'registerUser mutation', type: :schema do
   let(:query) do
     <<~GQL
-      mutation registerUser($email: String!, $password: String!) {
-        registerUser(input: {email: $email, password: $password}) {
+      mutation(
+        $firstName: String!
+        $lastName: String!
+        $birthdate: Date!
+        $countryOfResidence: CountryValue!
+        $citizenship: CountryValue!
+        $tncVersion: String!
+        $email: String!
+        $password: String!
+      ) {
+        registerUser(
+          input: {
+            firstName: $firstName
+            lastName: $lastName
+            birthdate: $birthdate
+            countryOfResidence: $countryOfResidence
+            citizenship: $citizenship
+            tncVersion: $tncVersion
+            email: $email
+            password: $password
+          }
+        ) {
           errors {
             field
             message
           }
-          user {
-            email
-          }
+          clientMutationId
         }
       }
     GQL
@@ -22,15 +40,12 @@ RSpec.describe 'registerUser mutation', type: :schema do
   let(:key) { 'registerUser' }
 
   specify 'should work with valid data' do
-    result = execute(query, attributes_for(:register_user))
+    result = execute(query, params_for(:register_user_params))
 
-    expect(result)
-      .to(have_no_graphql_errors
-            .and(have_no_graphql_mutation_errors(key)))
+    expect(result).to(have_no_graphql_errors.and(have_no_graphql_mutation_errors(key)))
   end
 
   specify 'should fail with empty data' do
-    expect(execute(query, {}))
-      .to(have_graphql_errors(key))
+    expect(execute(query, {})).to(have_graphql_errors(key))
   end
 end

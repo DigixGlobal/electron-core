@@ -14,6 +14,7 @@ Rails.application.routes.draw do
              }
 
   mount GraphiQL::Rails::Engine, at: '/graphiql', graphql_path: '/api' if Rails.env.development?
+  mount Shrine::DownloadEndpoint => '/attachments'
 
   post '/api', to: 'graphql#execute'
 

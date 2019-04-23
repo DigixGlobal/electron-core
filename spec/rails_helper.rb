@@ -21,6 +21,11 @@ SimpleCov.start 'rails' do
   add_filter '/app/jobs/'
   add_filter '/app/mailers/'
   add_filter '/app/models/'
+  add_filter '/app/services/predicates.rb'
+  add_filter '/app/services/app_container.rb'
+  add_filter '/app/services/app_matcher.rb'
+  add_filter '/app/services/app_schema.rb'
+  add_filter '/app/types/param_types.rb'
   add_filter '/bin/'
 end
 puts 'required simplecov'
@@ -42,6 +47,7 @@ RSpec.configure do |config|
   config.filter_rails_from_backtrace!
 
   config.include FactoryBot::Syntax::Methods
+  FactoryBot.register_strategy(:params_for, ParamsForStrategy)
 
   config.include Devise::Test::ControllerHelpers, type: :controller
   config.include Devise::Test::ControllerHelpers, type: :view

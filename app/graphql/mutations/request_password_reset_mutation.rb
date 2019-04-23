@@ -24,12 +24,14 @@ module Mutations
     KEY = :user
 
     def resolve(email:)
-      AccountService.request_password_reset(email).match do
-        success do
+      result = AccountService.request_password_reset(email)
+
+      AppMatcher.result_matcher.call(result) do |m|
+        m.success do
           model_result(KEY, nil)
         end
 
-        failure(:user_not_found) do
+        m.failure(:user_not_found) do
           form_error(KEY, 'User not found')
         end
       end

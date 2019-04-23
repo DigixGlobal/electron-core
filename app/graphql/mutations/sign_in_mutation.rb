@@ -34,17 +34,19 @@ module Mutations
 
     KEY = :authorization
 
-    def resolve(email:, password:)
-      AccountService.request_authorization(email: email, password: password).match do
-        success do |result|
-          model_result(KEY, result[:token])
+    def resolve(attrs)
+      result = AccountService.request_authorization(attrs)
+
+      AppMatcher.result_matcher.call(result) do |m|
+        m.success do |token|
+          model_result(KEY, token)
         end
 
-        failure(:invalid_credentials) do |_result|
+        m.failure(:invalid_credentials) do |_|
           form_error(KEY, 'Invalid email and/or password')
         end
 
-        failure(:user_unconfirmed) do |_result|
+        m.failure(:user_unconfirmed) do |_|
           form_error(KEY, 'User unconfirmed.')
         end
       end

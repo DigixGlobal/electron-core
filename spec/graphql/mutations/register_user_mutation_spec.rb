@@ -8,15 +8,17 @@ module Mutations
     let(:params) { attributes_for(:register_user) }
 
     specify 'should work with valid data' do
-      result = mutation.resolve(params)
+      expect(mutation.resolve(params)).to(have_no_mutation_errors)
+    end
 
-      expect(result).to(have_no_mutation_errors)
-      expect(result[:user]).to(be_instance_of(User))
+    specify 'should fail when mailer is not working' do
+      ActionMailer::Base.any_instance.stub(:mail).and_raise('ECONNREFUSED')
+
+      expect(mutation.resolve(params)).to(have_mutation_errors)
     end
 
     specify 'should fail with empty data' do
-      expect(mutation.resolve(email: nil, password: nil))
-        .to(have_mutation_errors)
+      expect(mutation.resolve({})).to(have_mutation_errors)
     end
   end
 end

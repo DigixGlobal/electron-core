@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require 'cancancan'
+
 class User < ApplicationRecord
   extend Devise::Models
 
@@ -10,6 +12,8 @@ class User < ApplicationRecord
 
   before_create :generate_uuid
 
-  validates :email,
-            length: { maximum: 254 }
+  has_one :kyc, -> { kept }
+  has_and_belongs_to_many :groups
+
+  audited only: :eth_address, update_with_comment_only: true, on: [:update]
 end

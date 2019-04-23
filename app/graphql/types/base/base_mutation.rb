@@ -1,5 +1,8 @@
 # frozen_string_literal: true
 
+require 'dry-matcher'
+require 'dry-monads'
+
 module Types
   module Base
     class BaseMutation < GraphQL::Schema::RelayClassicMutation
@@ -41,7 +44,7 @@ module Types
         result[key] = nil
         result[:errors] = model_errors.map do |inner_key, message|
           {
-            field: inner_key.to_s,
+            field: inner_key.to_s.tr('.', '_').camelize(:lower),
             message: full_message(inner_key, message)
           }
         end

@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-RSpec.describe AccountService, type: :mutation do
+RSpec.describe AccountService, type: :service do
   describe '.register_user' do
     let(:params) { attributes_for(:register_user) }
 
@@ -10,31 +10,42 @@ RSpec.describe AccountService, type: :mutation do
       let!(:result) { AccountService.register_user(params) }
 
       specify 'should work' do
-        expect(result).to(be_a_success)
-        expect(result.value[:user]).to(be_instance_of(User))
+        expect(result).to(be_success)
 
-        expect(result.value[:user].email).to(eq(params[:email]))
-        expect(result.value[:user].password).to(eq(params[:password]))
+        value = result.value!
+
+        expect(value).to(be_instance_of(AccountTypes::UserEntity))
+        expect(value)
+          .to(include(
+                email: eq(params[:email]),
+                tnc_version: eq(params[:tnc_version])
+              ))
       end
 
       it 'should fail with the same params' do
         expect(AccountService.register_user(params))
-          .to(fail_with(:invalid_data))
+          .to(be_failure)
       end
 
       describe 'confirmation email' do
         let(:confirmation_email) { ActionMailer::Base.deliveries.last }
 
         specify 'should be sent' do
-          expect(confirmation_email)
-            .to(be_truthy)
+          expect(confirmation_email).to(be_truthy)
         end
 
         it 'should be correct' do
-          expect(confirmation_email)
-            .to(deliver_to(params[:email]))
-          expect(confirmation_email)
-            .to(have_subject('Confirmation instructions'))
+          expect(confirmation_email).to(deliver_to(params[:email]))
+          expect(confirmation_email).to(have_subject('Confirmation instructions'))
+        end
+      end
+
+      describe 'kyc' do
+        let(:user) { result.value! }
+        let(:kyc) { KycService.find_by_user(user.id) }
+
+        specify 'should exist' do
+          expect(kyc).to(be_instance_of(KycTypes::KycEntity))
         end
       end
     end
@@ -42,42 +53,84 @@ RSpec.describe AccountService, type: :mutation do
     context 'can fail' do
       example 'with empty data' do
         expect(AccountService.register_user({}))
-          .to(fail_with(:invalid_data))
+          .to(has_failure_type(:invalid_data))
       end
 
       context 'on email' do
-        example 'when invalid' do
-          property_of { Faker::Internet.username }.check(10) do |invalid_email|
-            invalid_params = params.merge(email: invalid_email)
+        let(:key) { :email }
 
-            expect(AccountService.register_user(invalid_params))
-              .to(fail_with(:invalid_data))
-          end
+        example 'when failed to send' do
+          ActionMailer::Base.any_instance.stub(:mail).and_raise('ECONNREFUSED')
+
+          result = AccountService.register_user(attributes_for(:register_user))
+
+          expect(result).to(has_failure_type(:email_not_sent))
         end
 
-        example 'when too long' do
-          property_of do
-            long_email = Faker::Internet.email
-            size = SecureRandom.random_number(255..1000)
+        example 'when empty' do
+          invalid_params = params.merge(key => nil)
 
-            long_email.ljust(size, 'z')
-          end.check(10) do |long_email|
-            invalid_params = params.merge(email: long_email)
+          expect(AccountService.register_user(invalid_params))
+            .to(has_invalid_data_error_field(key))
+        end
+
+        example 'when invalid' do
+          property_of do
+            choose(
+              [1, ->(_) { Faker::Internet.username }],
+              [1, lambda { |_|
+                    FactoryBot.generate(:email)
+                              .ljust(SecureRandom.random_number(255..1000), 'z')
+                  }]
+            )
+          end.check(10) do |invalid_email|
+            invalid_params = params.merge(key => invalid_email)
 
             expect(AccountService.register_user(invalid_params))
-              .to(fail_with(:invalid_data))
+              .to(has_invalid_data_error_field(key))
           end
         end
       end
 
       context 'on password' do
+        let(:key) { :password }
+
+        example 'when empty' do
+          invalid_params = params.merge(key => nil)
+
+          expect(AccountService.register_user(invalid_params))
+            .to(has_invalid_data_error_field(key))
+        end
+
         example 'when invalid' do
           property_of { Faker::Internet.password(1, 5) }
             .check(10) do |invalid_password|
-            invalid_params = params.merge(password: invalid_password)
+            invalid_params = params.merge(key => invalid_password)
 
             expect(AccountService.register_user(invalid_params))
-              .to(fail_with(:invalid_data))
+              .to(has_invalid_data_error_field(key))
+          end
+        end
+      end
+
+      context 'on terms and conditions version' do
+        let(:key) { :tnc_version }
+
+        example 'when empty' do
+          invalid_params = params.merge(key => nil)
+
+          expect(AccountService.register_user(invalid_params))
+            .to(has_invalid_data_error_field(key))
+        end
+
+        example 'when invalid' do
+          property_of do
+            SecureRandom.hex.ljust(SecureRandom.random_number(51..100), 'z')
+          end.check(10) do |invalid_version|
+            invalid_params = params.merge(key => invalid_version)
+
+            expect(AccountService.register_user(invalid_params))
+              .to(has_invalid_data_error_field(key))
           end
         end
       end
@@ -96,8 +149,8 @@ RSpec.describe AccountService, type: :mutation do
       let!(:result) { AccountService.confirm_user_by_token(token) }
 
       specify 'should work' do
-        expect(result).to(be_a_success)
-        expect(result.value[:user]).to(be_instance_of(User))
+        expect(result).to(be_success)
+        expect(result.value!).to(be_instance_of(AccountTypes::UserEntity))
       end
 
       it 'should confirm the user' do
@@ -107,14 +160,14 @@ RSpec.describe AccountService, type: :mutation do
 
       it 'should fail with the same token' do
         expect(AccountService.confirm_user_by_token(token))
-          .to(fail_with(:user_already_confirmed))
+          .to(has_failure_type(:user_already_confirmed))
       end
     end
 
     context 'can fail' do
       example 'with invalid token' do
         expect(AccountService.confirm_user_by_token(SecureRandom.hex))
-          .to(fail_with(:user_not_found))
+          .to(has_failure_type(:user_not_found))
       end
     end
   end
@@ -127,35 +180,32 @@ RSpec.describe AccountService, type: :mutation do
       specify 'should work' do
         result = AccountService.request_authorization(params)
 
-        expect(result).to(be_a_success)
-        expect(result.value[:token]).to(include('accessToken', 'client', 'uid'))
+        expect(result).to(be_success)
+        expect(result.value!).to(include('accessToken', 'client', 'uid'))
       end
     end
 
     context 'can fail' do
       example 'with empty data' do
-        result = AccountService.request_authorization({})
-
-        expect(result).to(fail_with(:invalid_credentials))
+        expect(AccountService.request_authorization({}))
+          .to(has_failure_type(:invalid_credentials))
       end
 
       example 'with incorrect email' do
-        result = AccountService.request_authorization(params.merge(email: generate(:email)))
-
-        expect(result).to(fail_with(:invalid_credentials))
+        expect(AccountService.request_authorization(params.merge(email: generate(:email))))
+          .to(has_failure_type(:invalid_credentials))
       end
 
       example 'with incorrect password' do
-        result = AccountService.request_authorization(params.merge(password: generate(:password)))
-
-        expect(result).to(fail_with(:invalid_credentials))
+        expect(AccountService.request_authorization(params.merge(password: generate(:password))))
+          .to(has_failure_type(:invalid_credentials))
       end
 
-      example 'when user is unconfirmed' do
+      example 'with unconfirmed user' do
         user = create(:unconfirmed_user)
-        result = AccountService.request_authorization(email: user.email, password: user.password)
 
-        expect(result).to(fail_with(:user_unconfirmed))
+        expect(AccountService.request_authorization(email: user.email, password: user.password))
+          .to(has_failure_type(:user_unconfirmed))
       end
     end
   end
@@ -168,28 +218,25 @@ RSpec.describe AccountService, type: :mutation do
       let!(:result) { AccountService.request_password_reset(email) }
 
       specify 'should work' do
-        expect(result).to(be_a_success)
-        expect(result.value[:user]).to(be_instance_of(User))
+        expect(result).to(be_success)
+        expect(result.value!).to(be_instance_of(AccountTypes::UserEntity))
       end
 
       it 'should work again with same email' do
         expect(AccountService.request_password_reset(email))
-          .to(be_a_success)
+          .to(be_success)
       end
 
       describe 'password reset email' do
         let(:reset_email) { ActionMailer::Base.deliveries.last }
 
         specify 'should be sent' do
-          expect(reset_email)
-            .to(be_truthy)
+          expect(reset_email).to(be_truthy)
         end
 
         it 'should be correct' do
-          expect(reset_email)
-            .to(deliver_to(email))
-          expect(reset_email)
-            .to(have_subject('Reset password instructions'))
+          expect(reset_email).to(deliver_to(email))
+          expect(reset_email).to(have_subject('Reset password instructions'))
         end
       end
     end
@@ -197,14 +244,23 @@ RSpec.describe AccountService, type: :mutation do
     context 'can fail' do
       example 'with unused email' do
         expect(AccountService.request_password_reset(generate(:email)))
-          .to(fail_with(:user_not_found))
+          .to(has_failure_type(:user_not_found))
       end
 
       example 'with unconfirmed user email' do
         unconfirmed_user = create(:unconfirmed_user)
 
         expect(AccountService.request_password_reset(unconfirmed_user.email))
-          .to(fail_with(:user_not_found))
+          .to(has_failure_type(:user_not_found))
+      end
+
+      example 'when email failed to send' do
+        ActionMailer::Base.any_instance.stub(:mail).and_raise('ECONNREFUSED')
+
+        unconfirmed_user = create(:user)
+
+        expect(AccountService.request_password_reset(unconfirmed_user.email))
+          .to(has_failure_type(:email_not_sent))
       end
     end
   end
@@ -213,7 +269,7 @@ RSpec.describe AccountService, type: :mutation do
     let(:user) { create(:user) }
     let(:token) { user.send_reset_password_instructions }
     let(:password) { generate(:password) }
-    let(:params) do
+    let!(:params) do
       {
         token: token,
         password: password,
@@ -225,12 +281,18 @@ RSpec.describe AccountService, type: :mutation do
       let!(:result) { AccountService.reset_password(params) }
 
       specify 'should work' do
-        expect(result).to(be_a_success)
-        expect(result.value[:user]).to(be_instance_of(User))
+        expect(result).to(be_succes)
+        expect(result.value!).to(be_instance_of(AccountTypes::UserEntity))
       end
 
-      context 'and updated user' do
-        let(:new_user) { result.value[:user] }
+      specify 'should work even if password notification email is not sent' do
+        ActionMailer::Base.any_instance.stub(:mail).and_raise('ECONNREFUSED')
+
+        expect(result).to(be_succes)
+      end
+
+      describe 'updated user' do
+        let(:new_user) { User.find(result.value!.id) }
 
         specify 'should accept the new password' do
           expect(new_user).to(be_valid_password(password))
@@ -241,9 +303,22 @@ RSpec.describe AccountService, type: :mutation do
         end
       end
 
+      describe 'confirmation email' do
+        let(:notification_email) { ActionMailer::Base.deliveries.last }
+
+        specify 'should be sent' do
+          expect(notification_email).to(be_truthy)
+        end
+
+        it 'should be correct' do
+          expect(notification_email).to(deliver_to(user.email))
+          expect(notification_email).to(have_subject('Password Changed'))
+        end
+      end
+
       it 'should fail with the same params' do
         expect(AccountService.reset_password(params))
-          .to(fail_with(:invalid_data))
+          .to(has_failure_type(:invalid_data))
       end
     end
 
@@ -251,42 +326,63 @@ RSpec.describe AccountService, type: :mutation do
       example 'with empty data' do
         result = AccountService.reset_password({})
 
-        expect(result)
-          .to(fail_with(:invalid_data))
-        expect(result.value[:errors])
-          .not_to(be_empty)
+        expect(result).to(has_failure_type(:invalid_data))
       end
 
       context 'on token' do
-        example 'with invalid token' do
-          invalid_params = params.merge(token: SecureRandom.hex)
-          result = AccountService.reset_password(invalid_params)
+        let(:key) { :token }
 
-          expect(result)
-            .to(fail_with(:invalid_data))
-          expect(result.value[:errors][:token])
-            .not_to(be_empty)
+        example 'when empty' do
+          invalid_params = params.merge(key => nil)
+
+          expect(AccountService.reset_password(invalid_params))
+            .to(has_invalid_data_error_field(key))
+        end
+
+        example 'when invalid' do
+          invalid_params = params.merge(key => SecureRandom.hex)
+
+          expect(AccountService.reset_password(invalid_params))
+            .to(has_invalid_data_error_field(key))
         end
       end
 
       context 'on password' do
-        example 'with invalid password' do
-          property_of { Faker::Internet.password(1, 5) }
-            .check(10) do |invalid_password|
-          end
+        let(:key) { :password }
+
+        example 'when empty' do
+          invalid_params = params.merge(key => nil)
+
+          expect(AccountService.reset_password(invalid_params))
+            .to(has_invalid_data_error_field(key))
         end
 
-        example 'with invalid password confirmation' do
-          invalid_params = params.merge(
-            password_confirmation: SecureRandom.hex
-          )
+        example 'when invalid' do
+          property_of do
+            choose(Faker::Internet.password(1, 5), Faker::Internet.password(129, 1000))
+          end.check(10) do |invalid_password|
+            invalid_params = params.merge(key => invalid_password)
 
-          result = AccountService.reset_password(invalid_params)
+            expect(AccountService.reset_password(invalid_params))
+              .to(has_invalid_data_error_field(key))
+          end
+        end
+      end
 
-          expect(result)
-            .to(fail_with(:invalid_data))
-          expect(result.value[:errors][:password_confirmation])
-            .not_to(be_empty)
+      context 'on password confirmation' do
+        let(:key) { :password_confirmation }
+        example 'when empty' do
+          invalid_params = params.merge(key => nil)
+
+          expect(AccountService.reset_password(invalid_params))
+            .to(has_invalid_data_error_field(key))
+        end
+
+        example 'when invalid' do
+          invalid_params = params.merge(key => SecureRandom.hex)
+
+          expect(AccountService.reset_password(invalid_params))
+            .to(has_invalid_data_error_field(key))
         end
       end
     end

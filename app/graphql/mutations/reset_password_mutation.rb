@@ -46,13 +46,15 @@ module Mutations
     KEY = :user
 
     def resolve(**attrs)
-      AccountService.reset_password(attrs).match do
-        success do
+      result = AccountService.reset_password(attrs)
+
+      AppMatcher.result_matcher.call(result) do |m|
+        m.success do
           model_result(KEY, nil)
         end
 
-        failure(:invalid_data) do |result|
-          model_errors(KEY, result[:errors])
+        m.failure(:invalid_data) do |errors|
+          model_errors(KEY, errors)
         end
       end
     end

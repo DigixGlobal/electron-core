@@ -12,7 +12,8 @@ module Mutations
       result = mutation.resolve(params)
 
       expect(result).to(have_no_mutation_errors)
-      expect(result[:authorization]).to(include(*Types::User::AuthorizationType.fields.keys))
+      expect(result[:authorization])
+        .to(include(*Types::User::AuthorizationType.fields.keys))
     end
 
     context 'can fail' do

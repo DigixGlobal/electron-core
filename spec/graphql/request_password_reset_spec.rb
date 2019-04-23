@@ -24,13 +24,10 @@ RSpec.describe 'requestPasswordReset mutation', type: :schema do
   specify 'should work with valid data' do
     result = execute(query, email: user.email)
 
-    expect(result)
-      .to(have_no_graphql_errors
-            .and(have_no_graphql_mutation_errors(key)))
+    expect(result).to(have_no_graphql_errors.and(have_no_graphql_mutation_errors(key)))
   end
 
   specify 'should fail with empty data' do
-    expect(execute(query, {}))
-      .to(have_graphql_errors(key))
+    expect(execute(query, {})).to(have_graphql_errors(key))
   end
 end
