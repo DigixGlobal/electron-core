@@ -40,7 +40,7 @@ RSpec.configure do |config|
 
   config.shared_context_metadata_behavior = :apply_to_host_groups
 
-  config.fail_fast = true
+  # config.fail_fast = true
   config.formatter = 'documentation'
   config.color = true
   config.order = :defined

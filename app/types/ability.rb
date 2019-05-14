@@ -14,6 +14,7 @@ class Ability
       can :draft, KycTypes::Tier2KycEntity
     end
 
+    can :change_eth_address, AccountTypes::UserEntity
     can :submit, KycTypes::KycEntity if kyc && (kyc.applying_status == :drafted.to_s)
 
     user.groups.pluck(:name).each do |group_name|
@@ -21,6 +22,7 @@ class Ability
       when 'kyc_officer'
         cannot :draft, KycTypes::Tier2KycEntity
         cannot :submit, KycTypes::KycEntity
+        cannot :change_eth_address, AccountTypes::UserEntity
 
         can :read, KycTypes::KycEntity
         can :approve, KycTypes::Tier2KycEntity, status: 'pending'

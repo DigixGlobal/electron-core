@@ -2,12 +2,6 @@
 
 class AddTierTwoFieldsToKycs < ActiveRecord::Migration[5.2]
   def change
-    change_table :users do |t|
-      t.string :eth_address, null: true, limit: 42
-    end
-
-    add_index :users, :eth_address, unique: true
-
     change_table :kycs do |t|
       t.integer :applying_status, null: true, default: 0
       t.string :rejection_reason, limit: 150, null: true

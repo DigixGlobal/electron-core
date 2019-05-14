@@ -577,8 +577,16 @@ RSpec.describe KycService, type: :service do
       expect(result.value!.status).to(eq(:pending.to_s))
     end
 
+    it 'should fail with missing user' do
+      expect(KycService.submit_applying_user_kyc(SecureRandom.uuid))
+        .to(has_failure_type(:user_not_found))
+    end
+
     it 'should fail with invalid user' do
-      expect(KycService.submit_applying_user_kyc(SecureRandom.uuid)).to(be_failure)
+      invalid_user = create(:kyc_officer_user)
+
+      expect(KycService.submit_applying_user_kyc(invalid_user.id))
+        .to(has_failure_type(:unauthorized_action))
     end
 
     it 'should fail if repeated' do
@@ -605,7 +613,7 @@ RSpec.describe KycService, type: :service do
               ))
       end
 
-      it 'should not work with the same params' do
+      it 'should fail with the same params' do
         expect(KycService.approve_applying_kyc(officer.id, kyc.id, params))
           .to(has_failure_type(:kyc_not_pending))
       end
@@ -676,7 +684,7 @@ RSpec.describe KycService, type: :service do
               ))
       end
 
-      it 'should not work with the same params' do
+      it 'should fail with the same params' do
         expect(KycService.reject_applying_kyc(officer.id, kyc.id, params))
           .to(has_failure_type(:kyc_not_pending))
       end
@@ -747,25 +755,15 @@ RSpec.describe KycService, type: :service do
               ))
       end
 
-      it 'should not work with the same params' do
+      it 'should fail with the same params' do
         expect(KycService.mark_kyc_approved(kyc.id, params))
           .to(has_failure_type(:invalid_kyc))
-      end
-
-      describe 'user KYC' do
-        let(:user_kyc) { KycService.find(kyc.id) }
-
-        specify 'should be tier 2' do
-          expect(user_kyc)
-            .to(include(
-                  tier: :tier_2.to_s
-                ))
-        end
       end
     end
 
     context 'can fail' do
       example 'when data is empty' do
+        pending 'exploding kittens'
         # expect(KycService.mark_kyc_approved(kyc.id, {}))
         #  .to(has_failure_type(:invalid_data))
       end

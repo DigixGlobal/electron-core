@@ -6,7 +6,7 @@ RSpec.describe 'requestPasswordReset mutation', type: :schema do
   let(:query) do
     <<~GQL
       mutation requestPasswordReset($email: String!) {
-          requestPasswordReset(input: {email: $email}) {
+        requestPasswordReset(input: {email: $email}) {
           clientMutationId
           errors {
             field

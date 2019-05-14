@@ -11,7 +11,7 @@ module Resolvers
       let(:context) { { current_user: user } }
 
       specify 'should work' do
-        expect(resolver.resolve).to(be_instance_of(User))
+        expect(resolver.resolve).to(be_instance_of(AccountTypes::UserEntity))
       end
     end
 

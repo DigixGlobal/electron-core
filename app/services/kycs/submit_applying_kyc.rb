@@ -8,18 +8,27 @@ module Kycs
 
     M = Dry::Monads
 
+    step :find_by_user_id
     step :check
     step :submit
+    map :as_entity
 
     private
 
-    def check(user_id)
-      unless (user = AccountService.find(user_id)) &&
-             Ability.new(user).can?(:submit, KycTypes::KycEntity)
+    def find_by_user_id(user_id)
+      unless (user = AccountService.find(user_id))
+        return M.Failure(type: :user_not_found)
+      end
+
+      M.Success(user)
+    end
+
+    def check(user)
+      unless Ability.new(user).can?(:submit, KycTypes::KycEntity)
         return M.Failure(type: :unauthorized_action)
       end
 
-      M.Success(KycService.find_by_user(user_id))
+      M.Success(KycService.find_by_user(user.id))
     end
 
     def submit(kyc)
@@ -27,7 +36,11 @@ module Kycs
 
       model.update_attribute(:applying_status, :pending)
 
-      M.Success(KycTypes::Tier2KycEntity.from_model(model))
+      M.Success(model)
+    end
+
+    def as_entity(kyc)
+      KycTypes::Tier2KycEntity.from_model(kyc)
     end
   end
 end

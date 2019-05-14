@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require 'cancancan'
+
 module Mutations
   class DraftTier2KycMutation < Types::Base::BaseMutation
     description <<~EOS
@@ -121,7 +123,9 @@ module Mutations
     end
 
     def self.authorized?(object, context)
-      super && context.fetch(:current_user, nil)
+      super &&
+        (user = context.fetch(:current_user, nil)) &&
+        Ability.new(user).can?(:draft, KycTypes::Tier2KycEntity)
     end
   end
 end

@@ -387,4 +387,81 @@ RSpec.describe AccountService, type: :service do
       end
     end
   end
+
+  describe '.change_eth_address' do
+    let(:user) { create(:user) }
+    let(:eth_address) { generate(:eth_address) }
+
+    context 'with valid eth address' do
+      let!(:result) { AccountService.change_eth_address(user.id, eth_address) }
+
+      specify 'should work' do
+        expect(result).to(be_success)
+
+        value = result.value!
+
+        expect(value).to(be_instance_of(AccountTypes::EthAddressChangeEntity))
+        expect(value)
+          .to(include(
+                eth_address: eq(eth_address),
+                status: eq(:pending.to_s)
+              ))
+      end
+
+      it 'should fail with the same eth address' do
+        expect(AccountService.change_eth_address(user.id, eth_address))
+          .to(has_failure_type(:invalid_data))
+      end
+    end
+
+    context 'can fail' do
+      example 'when user is missing' do
+        expect(AccountService.change_eth_address(SecureRandom.uuid, eth_address))
+          .to(has_failure_type(:user_not_found))
+      end
+
+      example 'when user is invalid' do
+        invalid_user = create(:kyc_officer_user)
+
+        expect(AccountService.change_eth_address(invalid_user.id, eth_address))
+          .to(has_failure_type(:unauthorized_action))
+      end
+
+      example 'with empty data' do
+        result = AccountService.reset_password({})
+
+        expect(result).to(has_failure_type(:invalid_data))
+      end
+
+      context 'on eth address' do
+        let(:key) { :eth_address }
+
+        example 'when empty' do
+          expect(AccountService.change_eth_address(user.id, nil))
+            .to(has_invalid_data_error_field(key))
+        end
+
+        example 'when invalid' do
+          property_of { SecureRandom.hex }.check(10) do |invalid_address|
+            expect(AccountService.change_eth_address(user.id, invalid_address))
+              .to(has_invalid_data_error_field(key))
+          end
+        end
+
+        example 'when existing address' do
+          used_address = create_list(:user, 3).sample.eth_address
+
+          expect(AccountService.change_eth_address(user.id, used_address))
+            .to(has_invalid_data_error_field(key))
+        end
+
+        example 'when existing change address' do
+          used_address = create(:user, new_eth_address: eth_address).new_eth_address
+
+          expect(AccountService.change_eth_address(user.id, used_address))
+            .to(has_invalid_data_error_field(key))
+        end
+      end
+    end
+  end
 end

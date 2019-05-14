@@ -41,6 +41,12 @@ RSpec.describe AccountTypes::UserEntity do
         expect(ability).not_to(be_able_to(:draft, KycTypes::Tier2KycEntity))
       end
     end
+
+    describe 'change eth address' do
+      specify 'should be allowed' do
+        expect(ability).to(be_able_to(:change_eth_address, AccountTypes::UserEntity))
+      end
+    end
   end
 
   context 'with a tier 2 user' do
@@ -80,6 +86,10 @@ RSpec.describe AccountTypes::UserEntity do
         expect(ability).not_to(be_able_to(:approve, entity))
         expect(ability).not_to(be_able_to(:reject, entity))
       end
+    end
+
+    specify 'cannot change eth address' do
+      expect(ability).not_to(be_able_to(:change_eth_address, AccountTypes::UserEntity))
     end
   end
 end

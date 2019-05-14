@@ -14,6 +14,9 @@ module Types
       field :eth_address, Types::Scalar::EthAddress,
             null: true,
             description: "User's ethereum address"
+      field :eth_address_change, Types::User::EthAddressChangeType,
+            null: true,
+            description: "User's ethereum address"
       field :tnc_version, String,
             null: false,
             description: 'The terms and condition version which this user accepted.'
@@ -23,6 +26,10 @@ module Types
 
       def kyc
         KycService.find_by_user(object.id)
+      end
+
+      def eth_address_change
+        AccountTypes::EthAddressChangeEntity.from_model(context[:current_user])
       end
 
       def self.authorized?(object, context)

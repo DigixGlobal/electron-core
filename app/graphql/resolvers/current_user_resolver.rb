@@ -6,7 +6,9 @@ module Resolvers
          null: true
 
     def resolve
-      context[:current_user]
+      if (user = context[:current_user])
+        AccountTypes::UserEntity.from_model(user)
+      end
     end
 
     def self.authorized?(object, context)

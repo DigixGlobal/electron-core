@@ -45,7 +45,7 @@ module Kycs
     def check(user_id:, attrs:)
       unless (user = AccountService.find(user_id)) &&
              Ability.new(user).can?(:draft, KycTypes::Tier2KycEntity)
-        return Failure(type: :unauthorized_action)
+        return M.Failure(type: :unauthorized_action)
       end
 
       M.Success(user_id: user_id, attrs: attrs)

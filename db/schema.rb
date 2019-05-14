@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_05_09_014606) do
+ActiveRecord::Schema.define(version: 2019_05_14_020310) do
 
   create_table "audits", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.integer "auditable_id"
@@ -115,6 +115,9 @@ ActiveRecord::Schema.define(version: 2019_05_09_014606) do
     t.datetime "confirmed_at"
     t.datetime "confirmation_sent_at"
     t.string "unconfirmed_email"
+    t.integer "failed_attempts", default: 0, null: false
+    t.string "unlock_token"
+    t.datetime "locked_at"
     t.string "email", limit: 254
     t.text "tokens"
     t.timestamp "created_at"
@@ -122,10 +125,13 @@ ActiveRecord::Schema.define(version: 2019_05_09_014606) do
     t.timestamp "discarded_at"
     t.string "tnc_version", limit: 50, null: false
     t.string "eth_address", limit: 42
+    t.integer "change_eth_address_status"
+    t.string "new_eth_address", limit: 42
     t.index ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true
     t.index ["discarded_at"], name: "index_users_on_discarded_at"
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["eth_address"], name: "index_users_on_eth_address", unique: true
+    t.index ["new_eth_address"], name: "index_users_on_new_eth_address", unique: true
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
     t.index ["uid", "provider"], name: "index_users_on_uid_and_provider", unique: true
   end

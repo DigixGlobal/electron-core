@@ -10,5 +10,7 @@ module Types
     field :submit_applying_kyc, mutation: Mutations::SubmitApplyingKycMutation
     field :approve_applying_kyc, mutation: Mutations::ApproveApplyingKycMutation
     field :reject_applying_kyc, mutation: Mutations::RejectApplyingKycMutation
+
+    field :change_eth_address, mutation: Mutations::ChangeEthAddressMutation
   end
 end

@@ -241,6 +241,36 @@ An eth address represented by a `String`.
 scalar EthAddress
 
 """
+Changes in an user's Eth addressx
+"""
+type EthAddressChange {
+  """
+  New value of the Eth address
+  """
+  ethAddress: String!
+
+  """
+  Status of the change
+  """
+  status: EthAddressChangeStatusEnum!
+}
+
+"""
+Eth change status enum
+"""
+enum EthAddressChangeStatusEnum {
+  """
+  Change is still being checked
+  """
+  PENDING
+
+  """
+  Change is completed
+  """
+  UPDATED
+}
+
+"""
 An ISO 8601-encoded datetime
 """
 scalar ISO8601DateTime
@@ -944,6 +974,11 @@ type User {
   User's ethereum address
   """
   ethAddress: EthAddress
+
+  """
+  User's ethereum address
+  """
+  ethAddressChange: EthAddressChange
 
   """
   Type ID
