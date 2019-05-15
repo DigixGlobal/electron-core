@@ -589,6 +589,14 @@ RSpec.describe KycService, type: :service do
         .to(has_failure_type(:unauthorized_action))
     end
 
+    it 'should fail with user without an eth address' do
+      invalid_user = create(:drafted_kyc_tier_2).user
+      invalid_user.update_attribute(:eth_address, nil)
+
+      expect(KycService.submit_applying_user_kyc(invalid_user.id))
+        .to(has_failure_type(:unauthorized_action))
+    end
+
     it 'should fail if repeated' do
       expect(KycService.submit_applying_user_kyc(user.id)).to(be_success)
       expect(KycService.submit_applying_user_kyc(user.id)).to(be_failure)
@@ -599,6 +607,10 @@ RSpec.describe KycService, type: :service do
     let(:officer) { create(:kyc_officer_user) }
     let(:kyc) { create(:pending_kyc_tier_2) }
     let(:params) { attributes_for(:approve_applying_kyc) }
+    let!(:web_stub) do
+      stub_request(:post, "#{KycApi::SERVER_URL}/kycTier2")
+        .to_return(body: {}.to_json)
+    end
 
     context 'with valid data' do
       let!(:result) { KycService.approve_applying_kyc(officer.id, kyc.id, params) }
@@ -611,6 +623,10 @@ RSpec.describe KycService, type: :service do
                 status: eq(:approving.to_s),
                 expiration_date: eq(params[:expiration_date])
               ))
+      end
+
+      it 'should update KYC server' do
+        expect(web_stub).to(have_been_requested)
       end
 
       it 'should fail with the same params' do
@@ -642,6 +658,14 @@ RSpec.describe KycService, type: :service do
       example 'when data is empty' do
         expect(KycService.approve_applying_kyc(officer.id, kyc.id, {}))
           .to(has_failure_type(:invalid_data))
+      end
+
+      example 'when KYC api is down' do
+        stub_request(:post, "#{KycApi::SERVER_URL}/kycTier2")
+          .to_raise(StandardError)
+
+        expect(KycService.approve_applying_kyc(officer.id, kyc.id, params))
+          .to(has_failure_type(:request_failed))
       end
 
       context 'on expiration date' do

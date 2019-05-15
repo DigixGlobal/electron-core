@@ -9,6 +9,11 @@ module Mutations
 
     let(:eth_address) { generate(:eth_address) }
 
+    before do
+      stub_request(:post, "#{KycApi::SERVER_URL}/kyc")
+        .to_return(body: {}.to_json)
+    end
+
     specify 'should work with valid data' do
       result = mutation.resolve(eth_address: eth_address)
 

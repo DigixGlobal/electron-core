@@ -51,10 +51,10 @@ module EthereumApi
         if (data = result.fetch('result', nil))
           M.Success(convert_hash_keys(data))
         else
-          M.Failure()
+          M.Failure(type: :request_failed)
         end
       rescue StandardError
-        M.Failure()
+        M.Failure(type: :request_failed)
       end
     end
 

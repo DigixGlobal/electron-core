@@ -26,6 +26,11 @@ RSpec.describe 'changeEthAddress mutation', type: :schema do
   let(:key) { 'changeEthAddress' }
   let(:eth_address) { generate(:eth_address) }
 
+  before do
+    stub_request(:post, "#{KycApi::SERVER_URL}/kyc")
+      .to_return(body: {}.to_json)
+  end
+
   specify 'should work with valid data' do
     result = execute(query, { 'ethAddress' => eth_address }, context)
 

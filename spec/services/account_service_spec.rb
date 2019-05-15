@@ -391,6 +391,10 @@ RSpec.describe AccountService, type: :service do
   describe '.change_eth_address' do
     let(:user) { create(:user) }
     let(:eth_address) { generate(:eth_address) }
+    let!(:web_stub) do
+      stub_request(:post, "#{KycApi::SERVER_URL}/kyc")
+        .to_return(body: {}.to_json)
+    end
 
     context 'with valid eth address' do
       let!(:result) { AccountService.change_eth_address(user.id, eth_address) }
@@ -406,6 +410,10 @@ RSpec.describe AccountService, type: :service do
                 eth_address: eq(eth_address),
                 status: eq(:pending.to_s)
               ))
+      end
+
+      it 'should update KYC server' do
+        expect(web_stub).to(have_been_requested)
       end
 
       it 'should fail with the same eth address' do
@@ -431,6 +439,14 @@ RSpec.describe AccountService, type: :service do
         result = AccountService.reset_password({})
 
         expect(result).to(has_failure_type(:invalid_data))
+      end
+
+      example 'when KYC api is down' do
+        stub_request(:post, "#{KycApi::SERVER_URL}/kyc")
+          .to_raise(StandardError)
+
+        expect(AccountService.change_eth_address(user.id, eth_address))
+          .to(has_failure_type(:request_failed))
       end
 
       context 'on eth address' do

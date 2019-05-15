@@ -14,7 +14,7 @@ module Accounts
     step :check
     step :validate
     step :change
-    # step :broadcast
+    step :broadcast
     map :as_entity
 
     private
@@ -86,7 +86,7 @@ module Accounts
     end
 
     def broadcast(user)
-      result = KycService.register_kyc(user.id, params)
+      result = KycApi.change_eth_address(user.eth_address, user.new_eth_address)
 
       return result if result.failure?
 

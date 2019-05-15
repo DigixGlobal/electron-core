@@ -5,6 +5,8 @@ module Mutations
     description <<~EOS
       As the current user with an drafted applying KYC,
        submit the KYC for review from an KYC officer.
+
+      Also, the user must have set an eth address to submit.
     EOS
 
     field :applying_kyc, Types::Kyc::KycApplyingType,
@@ -17,6 +19,7 @@ module Mutations
 
             Operation Errors:
             - No drafted applying KYC
+            - Eth address not yet set
           EOS
 
     KEY = :applying_kyc

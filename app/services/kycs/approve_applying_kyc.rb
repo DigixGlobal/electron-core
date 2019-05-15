@@ -13,6 +13,8 @@ module Kycs
     step :check
     step :validate
     step :approve
+    step :broadcast
+    map :as_entity
 
     private
 
@@ -73,10 +75,21 @@ module Kycs
         return M.Failure(type: :invalid_data, errors: model.errors)
       end
 
-      case kyc
-      when KycTypes::Tier2KycEntity
-        M.Success(KycTypes::Tier2KycEntity.from_model(model))
-      end
+      M.Success(model)
+    end
+
+    def broadcast(model)
+      user = AccountService.find(model.user_id)
+
+      result = KycApi.approve_to_tier2(user.eth_address, model.expiration_date)
+
+      return result if result.failure?
+
+      M.Success(model)
+    end
+
+    def as_entity(model)
+      M.Success(KycTypes::Tier2KycEntity.from_model(model))
     end
   end
 end

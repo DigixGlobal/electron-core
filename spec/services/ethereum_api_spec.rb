@@ -20,9 +20,7 @@ RSpec.describe EthereumApi, type: :api do
           result: { 'hash' => "0x#{block.slice(0, 2)}1234#{block.slice(-2, 2)}" }
         }.to_json)
 
-      result = api.fetch_latest_block
-
-      expect(result).to(be_success)
+      expect(api.fetch_latest_block).to(be_success)
     end
 
     it 'should fail when block number does not exist' do

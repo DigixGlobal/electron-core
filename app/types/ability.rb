@@ -15,7 +15,10 @@ class Ability
     end
 
     can :change_eth_address, AccountTypes::UserEntity
-    can :submit, KycTypes::KycEntity if kyc && (kyc.applying_status == :drafted.to_s)
+
+    if kyc && (kyc.applying_status == :drafted.to_s) && !user.eth_address.blank?
+      can :submit, KycTypes::KycEntity
+    end
 
     user.groups.pluck(:name).each do |group_name|
       case Group.groups.invert[group_name]
