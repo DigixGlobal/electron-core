@@ -10,27 +10,29 @@ module KycApi
   M = Dry::Monads
 
   def self.change_eth_address(address, new_address)
+    # TODO: Not yet full specified
     request_kyc_server(
       'POST',
-      '/kyc',
-      "address": address,
-      "newAddress": new_address
+      '/addressChange',
+      "address": address.downcase,
+      "newAddress": new_address.downcase
     )
   end
 
   def self.approve_to_tier2(address, expiration_date)
+    # TODO: Not yet full specified
     request_kyc_server(
       'POST',
-      '/kycTier2',
+      '/tier2Approval',
       "address": address.downcase,
-      "expiryDate": expiration_date.to_time
+      "expiry": expiration_date.to_time.to_i
     )
   end
 
   class << self
     private
 
-    SERVER_SECRET = ENV.fetch('SERVER_PAIR_HMAC_SECRET') { 'this-is-a-secret-between-me-and-you' }
+    SERVER_SECRET = ENV.fetch('SERVER_PAIR_HMAC_SECRET') { 'mysecret' }
     SERVER_TOKEN = '16a7b'
     NONCE_KEY = 'kyc_api_nonce'
 
@@ -54,7 +56,7 @@ module KycApi
     end
 
     def next_nonce
-      Rails.cache.fetch(NONCE_KEY) { -1 }
+      Rails.cache.fetch(NONCE_KEY) { 0 }
       Rails.cache.increment(NONCE_KEY)
     end
 
@@ -80,7 +82,7 @@ module KycApi
           "access-token": SERVER_TOKEN,
           "access-nonce": new_nonce,
           "access-sign": hash_message(signature)
-        }.map { |key, value| "#{key}='#{value}'" }.join(' ')
+        }.map { |key, value| "#{key}='#{value}'" }.join(', ')
       )
 
       req.body = payload.to_json
@@ -91,6 +93,10 @@ module KycApi
         result = JSON.parse(res.body)
 
         M.Success(result)
+      rescue JSON::ParserError
+        Rails.logger.error("Invalid response type from #{SERVER_URL}#{path}: #{res.body.inspect}")
+
+        M.Success(nil)
       rescue StandardError
         M.Failure(type: :request_failed)
       end

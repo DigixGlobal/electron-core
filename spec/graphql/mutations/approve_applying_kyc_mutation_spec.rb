@@ -7,11 +7,17 @@ module Mutations
     let(:user) { create(:kyc_officer_user) }
     let(:mutation) { described_class.new(object: nil, context: { current_user: user }) }
     let(:kyc) { create(:pending_kyc_tier_2) }
+
     let(:params) do
       {
         applying_kyc_id: kyc.id,
         expiration_date: generate(:future_date)
       }
+    end
+
+    before do
+      stub_request(:post, "#{KycApi::SERVER_URL}/tier2Approval")
+        .to_return(body: {}.to_json)
     end
 
     specify 'should work with valid data' do

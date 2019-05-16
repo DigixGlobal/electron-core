@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'dry/monads/maybe'
-
 module Kycs
   class ApproveApplyingKyc
     include Dry::Transaction
@@ -89,7 +87,7 @@ module Kycs
     end
 
     def as_entity(model)
-      M.Success(KycTypes::Tier2KycEntity.from_model(model))
+      KycTypes::Tier2KycEntity.from_model(model)
     end
   end
 end

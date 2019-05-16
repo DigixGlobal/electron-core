@@ -353,6 +353,7 @@ GEM
     tilt (2.0.9)
     tzinfo (1.2.5)
       thread_safe (~> 0.1)
+    vcr (4.0.0)
     warden (1.2.8)
       rack (>= 2.0.6)
     webmock (3.5.1)
@@ -412,6 +413,7 @@ DEPENDENCIES
   spring
   spring-watcher-listen (~> 2.0.0)
   tzinfo-data
+  vcr (~> 4.0)
   webmock (~> 3.5)
 
 RUBY VERSION

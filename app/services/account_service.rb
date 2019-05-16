@@ -7,6 +7,12 @@ module AccountService
     AccountTypes::UserEntity.from_model(user)
   end
 
+  def self.find_by_address(address)
+    return nil unless (user = User.find_by(eth_address: address))
+
+    AccountTypes::UserEntity.from_model(user)
+  end
+
   def self.register_user(attrs)
     Accounts::RegisterUser.new.call(attrs)
   end

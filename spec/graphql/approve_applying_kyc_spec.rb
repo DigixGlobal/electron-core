@@ -36,6 +36,11 @@ RSpec.describe 'approveApplyingKyc mutation', type: :schema do
   let(:key) { 'approveApplyingKyc' }
   let(:params) { params_for(:approve_applying_kyc_params, 'applyingKycId' => kyc.id) }
 
+  before do
+    stub_request(:post, "#{KycApi::SERVER_URL}/tier2Approval")
+      .to_return(body: {}.to_json)
+  end
+
   specify 'should work with valid data' do
     result = execute(query, params, context)
 

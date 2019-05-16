@@ -392,7 +392,7 @@ RSpec.describe AccountService, type: :service do
     let(:user) { create(:user) }
     let(:eth_address) { generate(:eth_address) }
     let!(:web_stub) do
-      stub_request(:post, "#{KycApi::SERVER_URL}/kyc")
+      stub_request(:post, "#{KycApi::SERVER_URL}/addressChange")
         .to_return(body: {}.to_json)
     end
 
@@ -442,7 +442,7 @@ RSpec.describe AccountService, type: :service do
       end
 
       example 'when KYC api is down' do
-        stub_request(:post, "#{KycApi::SERVER_URL}/kyc")
+        stub_request(:post, "#{KycApi::SERVER_URL}/addressChange")
           .to_raise(StandardError)
 
         expect(AccountService.change_eth_address(user.id, eth_address))

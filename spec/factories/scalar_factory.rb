@@ -37,4 +37,5 @@ FactoryBot.define do
   sequence(:past_date) { |_| Faker::Date.backward(SecureRandom.random_number(1..100)) }
 
   sequence(:eth_address) { |_| Faker::Blockchain::Ethereum.address }
+  sequence(:txhash) { |_| Faker::Blockchain::Ethereum.address }
 end

@@ -27,6 +27,12 @@ module KycService
     nil
   end
 
+  def self.find_applying_by_user(user_id)
+    return nil unless (kyc = Kyc.kept.find_by(user_id: user_id))
+
+    find_applying(kyc.id)
+  end
+
   def self.register_kyc(user_id, attrs)
     Kycs::RegisterKyc.new.call(user_id: user_id, attrs: attrs)
   end
@@ -59,10 +65,7 @@ module KycService
     )
   end
 
-  def self.mark_kyc_approved(kyc_id, attrs)
-    Kycs::MarkKycApproved.new.call(
-      id: kyc_id,
-      attrs: attrs
-    )
+  def self.mark_kyc_approved(attrs)
+    Kycs::MarkKycApproved.new.call(attrs)
   end
 end

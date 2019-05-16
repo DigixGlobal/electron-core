@@ -31,6 +31,7 @@ group :test do
   gem 'rspec-rails', '~> 3.8.2'
   gem 'shrine-memory', '~> 0.3.0'
   gem 'simplecov', '~> 0.16.1'
+  gem 'vcr', '~> 4.0'
   gem 'webmock', '~> 3.5'
 end
 

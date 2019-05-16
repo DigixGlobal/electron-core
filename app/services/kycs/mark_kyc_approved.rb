@@ -1,34 +1,51 @@
 # frozen_string_literal: true
 
-require 'dry/monads/maybe'
-
 module Kycs
   class MarkKycApproved
     include Dry::Transaction
 
     M = Dry::Monads
 
-    step :find_by_id
-    step :check
     step :validate
+    step :find_by_address
+    step :check
     step :approve
 
     private
 
-    def find_by_id(id:, **attrs)
-      return M.Failure(type: :kyc_not_found) unless (kyc = KycService.find_applying(id))
-
-      M.Success(kyc: kyc, **attrs)
+    def schema
+      Dry::Validation.Schema(AppSchema) do
+        required(:address)
+          .filled(:eth_address?)
+        required(:txhash)
+          .filled(:str?)
+      end
     end
 
-    def check(kyc:, **attrs)
+    def validate(attrs)
+      result = schema.call(attrs)
+
+      unless result.success?
+        return M.Failure(type: :invalid_data, errors: result.errors(full: true))
+      end
+
+      result.to_monad
+    end
+
+    def find_by_address(params)
+      unless (user = AccountService.find_by_address(params[:address]))
+        return M.Failure(type: :user_not_found)
+      end
+
+      applying_kyc = KycService.find_applying_by_user(user.id)
+
+      M.Success(kyc: applying_kyc, txhash: params[:txhash])
+    end
+
+    def check(kyc:, txhash:)
       return M.Failure(type: :invalid_kyc) unless kyc.status == :approving.to_s
 
-      M.Success(kyc: kyc, **attrs)
-    end
-
-    def validate(kyc:, attrs:)
-      M.Success(kyc: kyc, attrs: attrs)
+      M.Success(kyc: kyc, txhash: txhash)
     end
 
     def approve(kyc:, **_attrs)

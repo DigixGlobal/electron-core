@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'dry/monads/maybe'
-
 module Kycs
   class SubmitApplyingKyc
     include Dry::Transaction

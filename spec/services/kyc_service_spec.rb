@@ -608,7 +608,7 @@ RSpec.describe KycService, type: :service do
     let(:kyc) { create(:pending_kyc_tier_2) }
     let(:params) { attributes_for(:approve_applying_kyc) }
     let!(:web_stub) do
-      stub_request(:post, "#{KycApi::SERVER_URL}/kycTier2")
+      stub_request(:post, "#{KycApi::SERVER_URL}/tier2Approval")
         .to_return(body: {}.to_json)
     end
 
@@ -661,7 +661,7 @@ RSpec.describe KycService, type: :service do
       end
 
       example 'when KYC api is down' do
-        stub_request(:post, "#{KycApi::SERVER_URL}/kycTier2")
+        stub_request(:post, "#{KycApi::SERVER_URL}/tier2Approval")
           .to_raise(StandardError)
 
         expect(KycService.approve_applying_kyc(officer.id, kyc.id, params))
@@ -763,10 +763,10 @@ RSpec.describe KycService, type: :service do
 
   describe '.mark_kyc_approved' do
     let(:kyc) { create(:approving_kyc_tier_2) }
-    let(:params) { {} }
+    let(:params) { { address: kyc.user.eth_address, txhash: generate(:txhash) } }
 
     context 'with valid data' do
-      let!(:result) { KycService.mark_kyc_approved(kyc.id, params) }
+      let!(:result) { KycService.mark_kyc_approved(params) }
 
       specify 'should work' do
         expect(result).to(be_success)
@@ -780,28 +780,52 @@ RSpec.describe KycService, type: :service do
       end
 
       it 'should fail with the same params' do
-        expect(KycService.mark_kyc_approved(kyc.id, params))
+        expect(KycService.mark_kyc_approved(params))
           .to(has_failure_type(:invalid_kyc))
       end
     end
 
     context 'can fail' do
       example 'when data is empty' do
-        pending 'exploding kittens'
-        # expect(KycService.mark_kyc_approved(kyc.id, {}))
-        #  .to(has_failure_type(:invalid_data))
+        expect(KycService.mark_kyc_approved({}))
+          .to(has_failure_type(:invalid_data))
       end
 
-      example 'when KYC is missing' do
-        expect(KycService.mark_kyc_approved(SecureRandom.uuid, params))
-          .to(has_failure_type(:kyc_not_found))
+      context 'on address' do
+        let(:key) { :address }
+
+        example 'when empty' do
+          expect(KycService.mark_kyc_approved(params.merge(key => nil)))
+            .to(has_invalid_data_error_field(key))
+        end
+
+        example 'when it does not exist' do
+          expect(KycService.mark_kyc_approved(params.merge(key => generate(:eth_address))))
+            .to(has_failure_type(:user_not_found))
+        end
+
+        example 'when it does not a pending KYC' do
+          drafted_user = create(:drafted_kyc_tier_2).user
+
+          expect(KycService.mark_kyc_approved(params.merge(key => drafted_user.eth_address)))
+            .to(has_failure_type(:invalid_kyc))
+        end
+
+        example 'when invalid' do
+          property_of { SecureRandom.hex }.check(10) do |invalid_address|
+            expect(KycService.mark_kyc_approved(params.merge(key => invalid_address)))
+              .to(has_invalid_data_error_field(key))
+          end
+        end
       end
 
-      example 'when KYC is invalid' do
-        kyc.update_attribute(:applying_status, :approved)
+      context 'on txhash' do
+        let(:key) { :txhash }
 
-        expect(KycService.mark_kyc_approved(kyc.id, params))
-          .to(has_failure_type(:invalid_kyc))
+        example 'when empty' do
+          expect(KycService.mark_kyc_approved(params.merge(key => nil)))
+            .to(has_invalid_data_error_field(key))
+        end
       end
     end
   end
