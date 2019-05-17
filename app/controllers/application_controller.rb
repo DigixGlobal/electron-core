@@ -5,50 +5,32 @@ require 'dry/monads/do'
 class ApplicationController < ActionController::API
   include DeviseTokenAuth::Concerns::SetUserByToken
 
-  private
+  class UnauthorizedRequest < StandardError; end
 
-  class CheckTransaction
-    include Dry::Transaction
-    include Dry::Monads::Do
-
-    M = Dry::Monads
-
-    step :extract
-    step :validate
-    step :update
-
-    private
-
-    ENTRY_PATTERN = /([\w\-]+)='(\w+)'/i.freeze
-
-    def schema
-      Dry::Validation.Schema(AppSchema) do
-        required(:a)
-          .filled(format?: VERIFICATION_PATTERN)
-      end
-    end
-
-    def extract(this_request)
-      unless (authorization_header = request.headers.fetch('Authorization', nil))
-        return M.Failure(type: :invalid_authorization)
-      end
-
-      M.Success(authorization_header
-        .scan(ENTRY_PATTERN)
-        .deep_transform_keys!(&:underscore)
-        .to_h)
-    end
-
-    def validate(attrs)
-    end
-
-    def update(x)
-    end
+  def render_unauthorized_request(error)
+    render json: error_response(error),
+           status: :unauthorized
   end
 
+  rescue_from UnauthorizedRequest,
+              with: :render_unauthorized_request
+
+  def result_response(result = :ok)
+    { result: result }
+  end
+
+  def error_response(error = :error)
+    { error: error }
+  end
+
+  private
+
   def check_authorization
-    unless (request_nonce = request.headers.fetch('ACCESS-NONCE', '').to_i)
-      raise InfoServer::InvalidRequest, :missing_access_nonce
+    result = AccessService.check_authorization(request)
+
+    AppMatcher.result_matcher.call(result) do |m|
+      m.success { |_| yield }
+      m.failure { |error| raise UnauthorizedRequest, error }
     end
   end
 end

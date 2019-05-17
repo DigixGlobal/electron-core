@@ -27,6 +27,12 @@ class AppSchema < Dry::Validation::Schema
           .nil?
   end
 
+  def legal_country?(value)
+    !Rails.configuration.countries
+          .find_index { |country| country['value'] == value }
+          .nil?
+  end
+
   def rejection_reason?(value)
     !Rails.configuration.rejection_reasons
           .find_index { |reason| reason['value'] == value }

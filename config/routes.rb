@@ -18,6 +18,13 @@ Rails.application.routes.draw do
 
   post '/api', to: 'graphql#execute'
 
+  post '/tier2Approval',
+       to: 'kyc_processor#approve_addresses',
+       as: 'kyc_processor_approve_addresses'
+  post '/addressChanged',
+       to: 'kyc_processor#confirm_changes',
+       as: 'kyc_processor_confirm_changes'
+
   namespace :api, defaults: { format: :json } do
     mount_devise_token_auth_for 'User', at: 'authorization'
   end

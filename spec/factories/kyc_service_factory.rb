@@ -42,4 +42,9 @@ FactoryBot.define do
     factory :reject_applying_kyc_params, class: 'Hash' do
     end
   end
+
+  factory :mark_kyc_approved, class: 'Hash' do
+    address { generate(:eth_address) }
+    txhash { generate(:txhash) }
+  end
 end

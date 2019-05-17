@@ -24,7 +24,7 @@ module AppMatcher
         end
       },
       resolve: lambda { |result|
-                 result.or { |value| value.fetch(:errors, nil) }
+                 result.or { |value| value.fetch(:errors, nil) || value.fetch(:type, nil) }
                }
     )
 
