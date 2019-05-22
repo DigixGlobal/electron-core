@@ -1,45 +1,66 @@
+# frozen_string_literal: true
+
 source 'https://rubygems.org'
 git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 
 ruby '2.6.2'
 
-# Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
-gem 'rails', '~> 5.2.3'
-# Use sqlite3 as the database for Active Record
-gem 'sqlite3'
-# Use Puma as the app server
-gem 'puma', '~> 3.11'
-# Build JSON APIs with ease. Read more: https://github.com/rails/jbuilder
-# gem 'jbuilder', '~> 2.5'
-# Use Redis adapter to run Action Cable in production
-# gem 'redis', '~> 4.0'
-# Use ActiveModel has_secure_password
-# gem 'bcrypt', '~> 3.1.7'
-
-# Use ActiveStorage variant
-# gem 'mini_magick', '~> 4.8'
-
-# Use Capistrano for deployment
-# gem 'capistrano-rails', group: :development
-
-# Reduces boot times through caching; required in config/boot.rb
 gem 'bootsnap', '>= 1.1.0', require: false
-
-# Use Rack CORS for handling Cross-Origin Resource Sharing (CORS), making cross-origin AJAX possible
-# gem 'rack-cors'
+gem 'puma', '~> 3.11'
+gem 'rails', '~> 5.2.3'
 
 group :development, :test do
-  # Call 'byebug' anywhere in the code to stop execution and get a debugger console
-  gem 'byebug', platforms: [:mri, :mingw, :x64_mingw]
+  gem 'awesome_print', '~> 1.8.0', require: false
+  gem 'byebug', platforms: %i[mri mingw x64_mingw]
+  gem 'faker', '>= 1.9.1', require: false
+  gem 'graphiql-rails', '~> 1.7.0'
+  gem 'mailcatcher', '~> 0.2.4'
 end
 
 group :development do
-  gem 'listen', '>= 3.0.5', '< 3.2'
-  # Spring speeds up development by keeping your application running in the background. Read more: https://github.com/rails/spring
+  gem 'listen', '>= 3.0.5', '< 3.2.0'
   gem 'spring'
   gem 'spring-watcher-listen', '~> 2.0.0'
 end
 
+group :test do
+  gem 'email_spec', '~> 2.2.0'
+  gem 'rails-controller-testing', '~> 1.0.4'
+  gem 'rantly', '~> 2.0.0'
+  gem 'rspec', '~> 3.8.0'
+  gem 'rspec-rails', '~> 3.8.2'
+  gem 'shrine-memory', '~> 0.3.0'
+  gem 'simplecov', '~> 0.16.1'
+  gem 'vcr', '~> 4.0'
+  gem 'webmock', '~> 3.5'
+end
 
 # Windows does not include zoneinfo files, so bundle the tzinfo-data gem
-gem 'tzinfo-data', platforms: [:mingw, :mswin, :x64_mingw, :jruby]
+gem 'tzinfo-data', platforms: %i[mingw mswin x64_mingw jruby]
+
+gem 'audited', '~> 4.8'
+gem 'cancancan', '~> 3.0'
+gem 'data_uri', '~> 0.1.0'
+gem 'devise', '~> 4.6.2'
+gem 'devise_token_auth', '~> 1.1.0'
+gem 'discard', '~> 1.0'
+gem 'dry-logic', '~> 0.6.1'
+gem 'dry-matcher', '~> 0.7.0'
+gem 'dry-monads', '~> 1.2'
+gem 'dry-struct', '~> 0.7.0'
+gem 'dry-transaction', '~> 0.13.0'
+gem 'dry-types', '~> 0.15.0'
+gem 'dry-validation', '~> 0.13.0'
+gem 'eth', '~> 0.4.10'
+gem 'factory_bot', '~> 5.0.2'
+gem 'factory_bot_rails', '~> 5.0.1'
+gem 'fastimage', '~> 2.1'
+gem 'graphql', '~> 1.9.3'
+gem 'image_processing', '~> 1.9'
+gem 'mime-types', '~> 3.2'
+gem 'mini_magick', '~> 4.9'
+gem 'mysql2', '~> 0.5.2'
+gem 'rails_event_store', '~> 0.38.1'
+gem 'roda', '~> 3.19'
+gem 'shrine', '~> 2.16'
+gem 'solid_use_case', '~> 2.2.0'
