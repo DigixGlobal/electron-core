@@ -30,3 +30,4 @@
 /coverage
 
 /public/uploads
+.irb-history
