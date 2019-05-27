@@ -1,0 +1,27 @@
+FROM ruby:2.6.2-alpine as builder
+
+RUN apk add --no-cache \
+  build-base \
+  busybox \
+  ca-certificates \
+  curl \
+  git \
+  gnupg1 \
+  graphicsmagick \
+  libffi-dev \
+  libsodium-dev \
+  openssh-client \
+  mariadb-client \
+  mariadb-dev \
+  rsync \
+  sqlite \
+  sqlite-dev \
+  socat
+
+RUN mkdir -p /app
+WORKDIR /app
+
+RUN gem install bundler:2.0.1
+
+EXPOSE 23000
+CMD ["bundle", "exec", "rails", "server", "-b", "0.0.0.0"]

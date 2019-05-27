@@ -1,0 +1,41 @@
+version: '3.1'
+services:
+  mysql:
+    image: mysql
+    command: --default-authentication-plugin=mysql_native_password
+    restart: always
+    ports:
+      - "23306:3306"
+    volumes:
+      - db:/var/lib/mysql
+    environment:
+      - MYSQL_ROOT_PASSWORD=electron
+
+  mailcatcher:
+    image: tophfr/mailcatcher
+    restart: always
+    ports:
+      - "23080:80"
+
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    command: bundle exec rails s -b '0.0.0.0'
+    environment:
+      - MAILER_HOST=mailcatcher
+      - MAILER_PORT=25
+      - DB_USER=root
+      - DB_PASSWORD=electron
+    volumes:
+      - .:/app
+      - bundler_gems:/usr/local/bundle/
+    ports:
+      - "23000:3000"
+    links:
+      - mailcatcher:mailcatcher
+      - mysql:mysql
+
+volumes:
+  db:
+  bundler_gems:
