@@ -329,9 +329,9 @@ type Image {
   dataUrl: String!
 
   """
-  URI for
+  URI for the image
   """
-  uri: String!
+  uri: String
 }
 
 """
@@ -662,6 +662,12 @@ enum KycTierEnum {
   TIER_2
 }
 
+"""
+This is just `CountryValue` but must be from a legal country.
+ You can check blocked countries from `countries` query.
+"""
+scalar LegalCountryValue
+
 type Mutation {
   """
   As a KYC officer, approve a pending KYC.
@@ -757,7 +763,7 @@ input RegisterUserMutationInput {
 
   Validations: None
   """
-  citizenship: CountryValue!
+  citizenship: LegalCountryValue!
 
   """
   A unique identifier for the client performing the mutation.
@@ -769,7 +775,7 @@ input RegisterUserMutationInput {
 
   Validations: None
   """
-  countryOfResidence: CountryValue!
+  countryOfResidence: LegalCountryValue!
 
   """
   User's email.

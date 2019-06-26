@@ -1,8 +1,5 @@
 # frozen_string_literal: true
 
-require 'solid_use_case'
-require 'solid_use_case/rspec_matchers'
-
 require 'email_spec'
 require 'email_spec/rspec'
 
@@ -22,8 +19,6 @@ require 'shrine/storage/memory'
 Dir[File.dirname(__FILE__) + '/support/**/*.rb'].each { |f| require f }
 
 RSpec.configure do |config|
-  config.include(SolidUseCase::RSpecMatchers)
-
   Shrine.storages = {
     cache: Shrine::Storage::Memory.new,
     store: Shrine::Storage::Memory.new
@@ -42,7 +37,6 @@ RSpec.configure do |config|
 
   config.filter_run_excluding vcr: true
 
-  # config.fail_fast = true
   config.formatter = 'documentation'
   config.color = true
   config.order = :defined

@@ -10,6 +10,8 @@ services:
       - db:/var/lib/mysql
     environment:
       - MYSQL_ROOT_PASSWORD=electron
+      - MYSQL_USER=electron_user
+      - MYSQL_PASSWORD=electron
 
   mailcatcher:
     image: tophfr/mailcatcher
@@ -25,6 +27,7 @@ services:
     environment:
       - MAILER_HOST=mailcatcher
       - MAILER_PORT=25
+      - DB_HOST=mysql
       - DB_USER=root
       - DB_PASSWORD=electron
     volumes:

@@ -9,8 +9,8 @@ RSpec.describe 'registerUser mutation', type: :schema do
         $firstName: String!
         $lastName: String!
         $birthdate: Date!
-        $countryOfResidence: CountryValue!
-        $citizenship: CountryValue!
+        $countryOfResidence: LegalCountryValue!
+        $citizenship: LegalCountryValue!
         $tncVersion: String!
         $email: String!
         $password: String!

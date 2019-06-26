@@ -32,14 +32,14 @@ module Mutations
                Validations:
                - Must be 18 years or older
              EOS
-    argument :country_of_residence, Types::Value::CountryValue,
+    argument :country_of_residence, Types::Value::LegalCountryValue,
              required: true,
              description: <<~EOS
                Country of the user's country of residence.
 
                Validations: None
              EOS
-    argument :citizenship, Types::Value::CountryValue,
+    argument :citizenship, Types::Value::LegalCountryValue,
              required: true,
              description: <<~EOS
                Country of the user's citizenship.
