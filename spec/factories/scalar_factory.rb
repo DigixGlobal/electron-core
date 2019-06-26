@@ -38,4 +38,7 @@ FactoryBot.define do
 
   sequence(:eth_address) { |_| Faker::Blockchain::Ethereum.address }
   sequence(:txhash) { |_| Faker::Blockchain::Ethereum.address }
+
+  sequence(:ip_address) { |_| Faker::Internet.public_ip_v4_address }
+  sequence(:private_ip_address) { |_| Faker::Internet.private_ip_v4_address }
 end

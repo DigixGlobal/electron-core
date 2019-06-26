@@ -36,6 +36,10 @@ group :test do
   gem 'webmock', '~> 3.5.1'
 end
 
+group :production do
+  gem 'cloudflare-rails', '~> 0.4.0'
+end
+
 # Windows does not include zoneinfo files, so bundle the tzinfo-data gem
 gem 'tzinfo-data', '1.2019.1'
 
@@ -58,6 +62,7 @@ gem 'factory_bot_rails', '~> 5.0.1'
 gem 'fastimage', '~> 2.1.5'
 gem 'graphql', '~> 1.9.3'
 gem 'image_processing', '~> 1.9.0'
+gem 'maxmind-db', '~> 1.0.0'
 gem 'mime-types', '~> 3.2.2'
 gem 'mini_magick', '~> 4.9.3'
 gem 'mysql2', '~> 0.5.2'

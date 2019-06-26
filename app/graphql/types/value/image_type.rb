@@ -9,7 +9,7 @@ module Types
             null: false,
             description: 'Content type of the image such as `application/png`'
       field :uri, String,
-            null: Rails.env.test?,
+            null: false,
             description: 'URI for the image'
       field :data_url, String,
             null: false,
@@ -20,7 +20,7 @@ module Types
       end
 
       def uri
-        Rails.env.test? ? nil : object.download_url
+        Rails.env.test? ? '' : object.download_url
       end
 
       def data_url

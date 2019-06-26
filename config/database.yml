@@ -2,18 +2,19 @@ default: &default
   adapter: mysql2
   pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 10 } %>
   timeout: 5000
-  host: <%= ENV.fetch("DB_HOST") { 'localhost' } %>
+  host: <%= ENV.fetch("DB_HOST") { '127.0.0.1' } %>
   port: <%= ENV.fetch("DB_PORT") { 3306 } %>
   username: <%= ENV.fetch("DB_USER") { 'electron_user' } %>
-  password: <%= ENV.fetch("DB_PASSWORD") { 'electron' } %>
 
 development:
   <<: *default
   database: electron_dev
+  password: <%= ENV.fetch("DB_PASSWORD") { 'electron' } %>
 
 test:
   <<: *default
   database: electron_test
+  password: <%= ENV.fetch("DB_PASSWORD") { 'electron' } %>
 
 production:
   <<: *default

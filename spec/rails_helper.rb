@@ -14,6 +14,8 @@ SimpleCov.start 'rails' do
   add_filter 'Rakefile'
   add_filter '.rake'
   add_filter '/app/channels/'
+  add_filter '/app/controllers/graphql_controller.rb'
+  add_filter '/app/controllers/users'
   add_filter '/app/graphql/electron_core_schema.rb'
   add_filter '/app/graphql/types'
   add_filter '/app/graphql/subscriptions'
