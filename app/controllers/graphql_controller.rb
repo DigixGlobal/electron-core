@@ -7,7 +7,8 @@ class GraphqlController < ApplicationController
     operation_name = params[:operationName]
 
     context = {
-      current_user: current_user
+      current_user: current_user,
+      ip_address: request.remote_ip
     }
 
     result = ElectronCoreSchema.execute(

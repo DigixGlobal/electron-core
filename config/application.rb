@@ -27,6 +27,11 @@ module ElectronCore
     end
 
     config.countries = JSON.parse(File.read('config/countries.json'))
+    config.country_ips = MaxMind::DB.new(
+      ENV.fetch('IP_DB') { 'config/GeoLite2-Country.mmdb' },
+      mode: MaxMind::DB::MODE_MEMORY
+    )
+
     config.rejection_reasons =
       JSON.parse(File.read('config/rejection_reasons.json'))
 

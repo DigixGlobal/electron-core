@@ -2,6 +2,10 @@
 
 module Types
   class QueryType < Types::Base::BaseObject
+    field :app_user, Types::User::AppUserType,
+          resolver: Resolvers::AppUserResolver,
+          description: "Get the user's application status"
+
     field :current_user, Types::User::UserType,
           resolver: Resolvers::CurrentUserResolver,
           description: "Get the current user's information"

@@ -14,6 +14,8 @@ SimpleCov.start 'rails' do
   add_filter 'Rakefile'
   add_filter '.rake'
   add_filter '/app/channels/'
+  add_filter '/app/controllers/graphql_controller.rb'
+  add_filter '/app/controllers/users'
   add_filter '/app/graphql/electron_core_schema.rb'
   add_filter '/app/graphql/types'
   add_filter '/app/graphql/subscriptions'
@@ -39,6 +41,7 @@ end
 RSpec.configure do |config|
   config.fixture_path = "#{::Rails.root}/spec/fixtures"
 
+  config.fail_fast = Rails.env.dev?
   config.use_transactional_fixtures = true
 
   config.infer_spec_type_from_file_location!

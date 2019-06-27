@@ -10,7 +10,7 @@ module Types
             description: 'Content type of the image such as `application/png`'
       field :uri, String,
             null: false,
-            description: 'URI for'
+            description: 'URI for the image'
       field :data_url, String,
             null: false,
             description: 'Base64 encoded string for the data itself'
@@ -20,7 +20,7 @@ module Types
       end
 
       def uri
-        object.download_url
+        Rails.env.test? ? '' : object.download_url
       end
 
       def data_url

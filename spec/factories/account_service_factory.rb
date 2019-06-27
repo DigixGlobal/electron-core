@@ -7,8 +7,8 @@ FactoryBot.define do
     first_name { generate(:first_name) }
     last_name { generate(:first_name) }
     birthdate { generate(:birthdate) }
-    citizenship { generate(:country_value) }
-    country_of_residence { generate(:country_value) }
+    citizenship { generate(:unblocked_country_value) }
+    country_of_residence { generate(:unblocked_country_value) }
     tnc_version { generate(:version) }
     email { generate(:email) }
     password { generate(:password) }
