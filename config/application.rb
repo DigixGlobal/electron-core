@@ -26,6 +26,8 @@ module ElectronCore
       Rails.configuration.event_store = RailsEventStore::Client.new
     end
 
+    config.middleware.use Rack::Attack
+
     config.countries = JSON.parse(File.read('config/countries.json'))
     config.country_ips = MaxMind::DB.new(
       ENV.fetch('IP_DB') { 'config/GeoLite2-Country.mmdb' },

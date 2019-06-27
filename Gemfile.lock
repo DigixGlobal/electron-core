@@ -235,6 +235,8 @@ GEM
     public_suffix (3.1.1)
     puma (3.12.1)
     rack (2.0.7)
+    rack-attack (6.0.0)
+      rack (>= 1.0, < 3)
     rack-cors (1.0.3)
     rack-protection (2.0.5)
       rack
@@ -436,6 +438,7 @@ DEPENDENCIES
   mysql2 (~> 0.5.2)
   puma (~> 3.11)
   rack (~> 2.0.7)
+  rack-attack (~> 6.0.0)
   rack-cors (~> 1.0.3)
   rails (~> 5.2.3)
   rails-controller-testing (~> 1.0.4)
