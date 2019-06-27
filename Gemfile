@@ -7,6 +7,8 @@ ruby '2.6.2'
 
 gem 'bootsnap', '>= 1.1.0', require: false
 gem 'puma', '~> 3.11'
+gem 'rack', '~> 2.0.7'
+gem 'rack-cors', '~> 1.0.3', require: 'rack/cors'
 gem 'rails', '~> 5.2.3'
 
 group :development, :test do
