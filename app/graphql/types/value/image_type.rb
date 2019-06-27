@@ -20,7 +20,7 @@ module Types
       end
 
       def uri
-        Rails.env.test? ? '' : object.download_url
+        object.download_url
       end
 
       def data_url

@@ -11,10 +11,8 @@ Shrine.storages = {
 
 Shrine.plugin :activerecord
 Shrine.plugin :logging, logger: Rails.logger
-unless Rails.env.test?
-  Shrine.plugin :download_endpoint, prefix: 'attachments', download_options: {
-    sse_customer_algorithm: 'AES256',
-    sse_customer_key: 'electron-core',
-    sse_customer_key_md5: '1b75deafc1a12173cfc19c7cf83e0229'
-  }
-end
+Shrine.plugin :download_endpoint, prefix: 'attachments', download_options: {
+  sse_customer_algorithm: 'AES256',
+  sse_customer_key: 'electron-core',
+  sse_customer_key_md5: '1b75deafc1a12173cfc19c7cf83e0229'
+}
