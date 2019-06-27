@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class Users::ConfirmationsController < Devise::ConfirmationsController
+  PORTAL_URI = ENV.fetch('PORTAL_URI') { 'http://localhost:5000' }
+
   def show
     token = params[:confirmation_token]
 
@@ -28,6 +30,6 @@ class Users::ConfirmationsController < Devise::ConfirmationsController
   protected
 
   def after_confirmation_path_for(_resource_name, _resource)
-    'https://community.digix.global'
+    PORTAL_URI
   end
 end

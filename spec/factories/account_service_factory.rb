@@ -17,4 +17,13 @@ FactoryBot.define do
       birthdate { generate(:birthdate).to_s }
     end
   end
+
+  factory :reset_password, class: 'Hash' do
+    token { nil }
+    password { generate(:password) }
+    password_confirmation { password }
+
+    factory :reset_password_params do
+    end
+  end
 end
