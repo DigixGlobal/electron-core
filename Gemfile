@@ -8,6 +8,7 @@ ruby '2.6.2'
 gem 'bootsnap', '>= 1.1.0', require: false
 gem 'puma', '~> 3.11'
 gem 'rack', '~> 2.0.7'
+gem 'rack-attack', '~> 6.0.0'
 gem 'rack-cors', '~> 1.0.3', require: 'rack/cors'
 gem 'rails', '~> 5.2.3'
 
@@ -70,4 +71,4 @@ gem 'mini_magick', '~> 4.9.3'
 gem 'mysql2', '~> 0.5.2'
 gem 'rails_event_store', '~> 0.38.1'
 gem 'roda', '~> 3.20.0'
-gem 'shrine', '~> 2.17.1'
+gem 'shrine', '~> 2.16.0'
