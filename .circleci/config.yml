@@ -57,7 +57,5 @@ jobs:
           command: bundle exec brakeman
       - store_test_results:
           name: Store Test Report
-          path: ~/digix-workflow
+          path: ~/electron-core/coverage
           destination: test
-      - store_artifacts:
-          path: ~/digix-workflow
