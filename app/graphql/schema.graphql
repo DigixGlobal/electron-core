@@ -738,7 +738,7 @@ type Query {
   """
   Get the user's application status
   """
-  appUser: AppUser
+  appUser: AppUser!
 
   """
   List of countries for KYC
@@ -754,12 +754,17 @@ type Query {
   """
   Get the current user's information
   """
-  currentUser: User
+  currentUser: User!
 
   """
   List of rejection reasons for KYC rejection
   """
   rejectionReasons: [RejectionReason!]!
+
+  """
+  Get the application TnC
+  """
+  tnc: Tnc!
 }
 
 """
@@ -1030,6 +1035,21 @@ type SubmitApplyingKycMutationPayload {
   - Eth address not yet set
   """
   errors: [UserError!]!
+}
+
+"""
+The terms and condition (TnC) for the user.
+"""
+type Tnc {
+  """
+  The long and legal text of the TnC
+  """
+  text: String!
+
+  """
+  The semantic version of the TnC
+  """
+  version: String!
 }
 
 """

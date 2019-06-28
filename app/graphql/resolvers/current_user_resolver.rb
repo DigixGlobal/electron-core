@@ -3,7 +3,7 @@
 module Resolvers
   class CurrentUserResolver < Types::Base::BaseResolver
     type Types::User::UserType,
-         null: true
+         null: false
 
     def resolve
       if (user = context[:current_user])

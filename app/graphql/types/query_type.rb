@@ -5,6 +5,9 @@ module Types
     field :app_user, Types::User::AppUserType,
           resolver: Resolvers::AppUserResolver,
           description: "Get the user's application status"
+    field :tnc, Types::Tnc::TncType,
+          resolver: Resolvers::TncResolver,
+          description: 'Get the application TnC'
 
     field :current_user, Types::User::UserType,
           resolver: Resolvers::CurrentUserResolver,

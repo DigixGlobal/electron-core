@@ -4,7 +4,7 @@ require 'ipaddr'
 
 module Resolvers
   class AppUserResolver < Types::Base::BaseResolver
-    type Types::User::AppUserType, null: true
+    type Types::User::AppUserType, null: false
 
     def resolve
       ip_address = context[:ip_address]
