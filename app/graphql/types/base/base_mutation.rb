@@ -42,7 +42,8 @@ module Types
       def model_errors(key, model_errors)
         result = {}
         result[key] = nil
-        result[:errors] = model_errors.map do |inner_key, message|
+        result[:errors] = model_errors.map do |inner_key, messages|
+          message = messages.first
           {
             field: inner_key.to_s.tr('.', '_').camelize(:lower),
             message: full_message(inner_key, message)
@@ -57,6 +58,7 @@ module Types
         return message if attribute == :base
 
         attr_name = attribute.to_s.tr('.', '_').humanize
+
         I18n.t(:"errors.format",
                default: '%{attribute} %{message}',
                attribute: attr_name,

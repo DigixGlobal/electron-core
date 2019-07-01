@@ -192,11 +192,11 @@ RSpec.describe KycService, type: :service do
         _block_number, first_two, last_two =
           code.match(verification_pattern).captures
 
-        stub_request(:post, EthereumApi::SERVER_URL)
+        stub_request(:post, BlockchainApi::BLOCKCHAIN_URL)
           .with(body: /eth_blockNumber/)
           .to_return(body: { result: value }.to_json)
 
-        stub_request(:post, EthereumApi::SERVER_URL)
+        stub_request(:post, BlockchainApi::BLOCKCHAIN_URL)
           .with(body: /eth_getBlockByNumber/)
           .to_return(body: {
             result: { 'hash' => "0x#{first_two}1234#{last_two}" }
@@ -212,11 +212,11 @@ RSpec.describe KycService, type: :service do
       example 'with invalid hash' do
         value = SecureRandom.random_number(1000..10_000).to_s(16)
 
-        stub_request(:post, EthereumApi::SERVER_URL)
+        stub_request(:post, BlockchainApi::BLOCKCHAIN_URL)
           .with(body: /eth_blockNumber/)
           .to_return(body: { result: value }.to_json)
 
-        stub_request(:post, EthereumApi::SERVER_URL)
+        stub_request(:post, BlockchainApi::BLOCKCHAIN_URL)
           .with(body: /eth_getBlockByNumber/)
           .to_return(body: {
             result: { 'hash' => value }
@@ -228,11 +228,11 @@ RSpec.describe KycService, type: :service do
       example 'with missing block' do
         value = SecureRandom.random_number(1000..10_000).to_s(16)
 
-        stub_request(:post, EthereumApi::SERVER_URL)
+        stub_request(:post, BlockchainApi::BLOCKCHAIN_URL)
           .with(body: /eth_blockNumber/)
           .to_return(body: { result: value }.to_json)
 
-        stub_request(:post, EthereumApi::SERVER_URL)
+        stub_request(:post, BlockchainApi::BLOCKCHAIN_URL)
           .with(body: /eth_getBlockByNumber/)
           .to_return(body: { error: 'BAR' }.to_json)
 
@@ -246,11 +246,11 @@ RSpec.describe KycService, type: :service do
         block_number, first_two, last_two =
           code.match(verification_pattern).captures
 
-        stub_request(:post, EthereumApi::SERVER_URL)
+        stub_request(:post, BlockchainApi::BLOCKCHAIN_URL)
           .with(body: /eth_blockNumber/)
           .to_return(body: { result: block_number }.to_json)
 
-        stub_request(:post, EthereumApi::SERVER_URL)
+        stub_request(:post, BlockchainApi::BLOCKCHAIN_URL)
           .with(body: /eth_getBlockByNumber/)
           .to_return(body: {
             result: {
@@ -264,11 +264,11 @@ RSpec.describe KycService, type: :service do
 
         WebMock.reset!
 
-        stub_request(:post, EthereumApi::SERVER_URL)
+        stub_request(:post, BlockchainApi::BLOCKCHAIN_URL)
           .with(body: /eth_blockNumber/)
           .to_return(body: { result: block_number }.to_json)
 
-        stub_request(:post, EthereumApi::SERVER_URL)
+        stub_request(:post, BlockchainApi::BLOCKCHAIN_URL)
           .with(body: /eth_getBlockByNumber/)
           .to_return(body: {
             result: {

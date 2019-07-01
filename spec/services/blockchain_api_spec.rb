@@ -2,19 +2,39 @@
 
 require 'rails_helper'
 
-RSpec.describe EthereumApi, type: :api do
+RSpec.describe BlockchainApi, type: :api do
   let(:api) { described_class }
+
+  describe '.fetch_latest_block_number' do
+    let(:block_number) { SecureRandom.random_number(1000..10_000).to_s }
+    let(:block) { SecureRandom.hex }
+
+    specify 'should work' do
+      stub_request(:post, BlockchainApi::BLOCKCHAIN_URL)
+        .with(body: /eth_blockNumber/)
+        .to_return(body: { result: block_number.to_i.to_s(16) }.to_json)
+
+      expect(api.fetch_latest_block_number).to(be_success)
+    end
+
+    it 'should fail safely when ethereum is down' do
+      stub_request(:post, BlockchainApi::BLOCKCHAIN_URL)
+        .to_raise(StandardError)
+
+      expect(api.fetch_latest_block_number).to(be_failure)
+    end
+  end
 
   describe '.fetch_latest_block' do
     let(:block_number) { SecureRandom.random_number(1000..10_000).to_s }
     let(:block) { SecureRandom.hex }
 
     specify 'should work' do
-      stub_request(:post, EthereumApi::SERVER_URL)
+      stub_request(:post, BlockchainApi::BLOCKCHAIN_URL)
         .with(body: /eth_blockNumber/)
         .to_return(body: { result: block_number.to_i.to_s(16) }.to_json)
 
-      stub_request(:post, EthereumApi::SERVER_URL)
+      stub_request(:post, BlockchainApi::BLOCKCHAIN_URL)
         .with(body: /eth_getBlockByNumber/)
         .to_return(body: {
           result: { 'hash' => "0x#{block.slice(0, 2)}1234#{block.slice(-2, 2)}" }
@@ -24,7 +44,7 @@ RSpec.describe EthereumApi, type: :api do
     end
 
     it 'should fail when block number does not exist' do
-      stub_request(:post, EthereumApi::SERVER_URL)
+      stub_request(:post, BlockchainApi::BLOCKCHAIN_URL)
         .with(body: /eth_blockNumber/)
         .to_return(body: { error: 'FOO' }.to_json)
 
@@ -32,7 +52,7 @@ RSpec.describe EthereumApi, type: :api do
     end
 
     it 'should fail safely when ethereum is down' do
-      stub_request(:post, EthereumApi::SERVER_URL)
+      stub_request(:post, BlockchainApi::BLOCKCHAIN_URL)
         .to_raise(StandardError)
 
       expect(api.fetch_latest_block).to(be_failure)
@@ -44,7 +64,7 @@ RSpec.describe EthereumApi, type: :api do
     let(:block) { SecureRandom.hex }
 
     specify 'should work' do
-      stub_request(:post, EthereumApi::SERVER_URL)
+      stub_request(:post, BlockchainApi::BLOCKCHAIN_URL)
         .with(body: /eth_getBlockByNumber/)
         .to_return(body: {
           result: {
@@ -78,7 +98,7 @@ RSpec.describe EthereumApi, type: :api do
     end
 
     it 'should fail when block number does not exist' do
-      stub_request(:post, EthereumApi::SERVER_URL)
+      stub_request(:post, BlockchainApi::BLOCKCHAIN_URL)
         .with(body: /eth_getBlockByNumber/)
         .to_return(body: { error: 'FOO' }.to_json)
 
@@ -87,7 +107,7 @@ RSpec.describe EthereumApi, type: :api do
     end
 
     it 'should fail safely when ethereum is down' do
-      stub_request(:post, EthereumApi::SERVER_URL)
+      stub_request(:post, BlockchainApi::BLOCKCHAIN_URL)
         .to_return(status: [404, 'Not Found'])
 
       expect(api.fetch_block_by_block_number(block_number))

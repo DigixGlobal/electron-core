@@ -32,6 +32,8 @@ services:
       - DB_PASSWORD=electron
       - CONFIRMATION_URI=https://localhost:5000/#/portal/register/confirmation
       - RESET_PASSWORD_URI=https://localhost:5000/#/portal/forgot-password/reset-form
+      - PRICEFEED_URL=http://neutron_pricefeed:4001/api
+      - BLOCKCHAIN_URL=$BLOCKCHAIN_URL
     volumes:
       - .:/app
       - bundler_gems:/usr/local/bundle/
@@ -40,6 +42,15 @@ services:
     links:
       - mailcatcher:mailcatcher
       - mysql:mysql
+    networks:
+      default:
+      electron:
+
+networks:
+  electron:
+    # Required to communicate with test_pricefeed
+    # docker network create electron
+    external: true
 
 volumes:
   db:

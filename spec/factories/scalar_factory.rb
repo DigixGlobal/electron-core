@@ -3,6 +3,8 @@
 require 'faker'
 
 FactoryBot.define do
+  sequence(:positive_float) { |_| Faker::Commerce.price }
+
   sequence(:boolean) { |_| Faker::Boolean.boolean }
   sequence(:uid) { |_| SecureRandom.random_number(1_000_000) }
   sequence(:email) { |_| Faker::Internet.safe_email }
@@ -41,4 +43,9 @@ FactoryBot.define do
 
   sequence(:ip_address) { |_| Faker::Internet.public_ip_v4_address }
   sequence(:private_ip_address) { |_| Faker::Internet.private_ip_v4_address }
+
+  sequence(:price) { |_| Faker::Commerce.price }
+  sequence(:pricefeed_name) { |_| "level_#{SecureRandom.random_number(2) + 1}" }
+  sequence(:pricefeed_minimum) { |_| [0, 10, 20, 30].sample }
+  sequence(:pricefeed_pair) { |_| %w[xau-usd eth-usd xbt-usd dai-usd xau-eth xau-dai xau-xbt].sample }
 end

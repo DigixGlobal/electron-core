@@ -14,6 +14,10 @@ class ParamsForStrategy
   def result(evaluation)
     res = @strategy.result(evaluation)
 
-    res.deep_transform_keys! { |key| key.to_s.camelize(:lower) }
+    res
+      .deep_transform_keys! { |key| key.to_s.camelize(:lower) }
+      .tap do |value|
+      evaluation.notify(:after_params, value)
+    end
   end
 end
