@@ -4,8 +4,10 @@ require 'rails_helper'
 
 module Controllers
   RSpec.describe 'Request password reset', type: :request do
+    PORTAL_URI = ENV.fetch('PORTAL_URI') { 'http://localhost:5000' }
+
     def redirect_path(token, error)
-      "https://community.digix.global?reset_password_token=#{token}&error=#{error}"
+      "#{PORTAL_URI}?reset_password_token=#{token}&error=#{error}"
     end
 
     describe 'GET /accounts/password/edit ' do

@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class Users::PasswordsController < Devise::PasswordsController
+  PORTAL_URI = ENV.fetch('PORTAL_URI') { 'http://localhost:5000' }
+
   def edit
     token = super
 
@@ -10,7 +12,7 @@ class Users::PasswordsController < Devise::PasswordsController
               'user_not_found'
             end
 
-    redirect_to "https://community.digix.global?reset_password_token=#{token}&error=#{error || ''}"
+    redirect_to "#{PORTAL_URI}?reset_password_token=#{token}&error=#{error || ''}"
   end
 
   protected
@@ -25,6 +27,6 @@ class Users::PasswordsController < Devise::PasswordsController
   end
 
   def after_sending_reset_password_instructions_path_for(_resource_name)
-    'https://community.digix.global'
+    PORTAL_URI
   end
 end

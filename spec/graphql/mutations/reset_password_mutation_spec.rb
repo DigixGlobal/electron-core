@@ -9,14 +9,7 @@ module Mutations
     let(:user) { create(:user) }
 
     specify 'should work with valid data' do
-      token = user.send_reset_password_instructions
-      password = generate(:password)
-
-      result = mutation.resolve(
-        token: token,
-        password: password,
-        password_confirmation: password
-      )
+      result = mutation.resolve(attributes_for(:reset_password, token: user.send_reset_password_instructions))
 
       expect(result)
         .to(have_no_mutation_errors)
