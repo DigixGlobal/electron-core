@@ -772,6 +772,11 @@ type Query {
   Get the application TnC
   """
   tnc: Tnc!
+
+  """
+  Field validations for the application
+  """
+  validation: Validation!
 }
 
 """
@@ -1160,4 +1165,14 @@ type UserError {
   A description of the error
   """
   message: String!
+}
+
+"""
+An object to hold validations from mutations to allow inline validation.
+"""
+type Validation {
+  """
+  Given an email, check if it the email can be used in registration.
+  """
+  isUserEmailAvailable(email: String!): Boolean!
 }

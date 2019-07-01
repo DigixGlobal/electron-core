@@ -141,6 +141,13 @@ RSpec.describe KycService, type: :service do
               .to(has_invalid_data_error_field(key))
           end
         end
+
+        example 'when illegal country' do
+          invalid_params = params.merge(key => generate(:blocked_country_value))
+
+          expect(KycService.register_kyc(user.id, invalid_params))
+            .to(has_invalid_data_error_field(key))
+        end
       end
 
       context 'on citizenship' do
@@ -160,6 +167,13 @@ RSpec.describe KycService, type: :service do
             expect(KycService.register_kyc(user.id, invalid_params))
               .to(has_invalid_data_error_field(key))
           end
+        end
+
+        example 'when illegal country' do
+          invalid_params = params.merge(key => generate(:blocked_country_value))
+
+          expect(KycService.register_kyc(user.id, invalid_params))
+            .to(has_invalid_data_error_field(key))
         end
       end
     end

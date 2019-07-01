@@ -6,6 +6,7 @@ class AppSchema < Dry::Validation::Schema
       super.merge(en: { errors: {
                     email?: 'is not valid',
                     country?: 'is not a valid country',
+                    legal_country?: 'is not a valid legal country',
                     rejection_reason?: 'is not a rejection reason',
                     eth_address?: 'is not a valid checksum address',
                     future_date?: 'is not a future date'
@@ -29,6 +30,7 @@ class AppSchema < Dry::Validation::Schema
 
   def legal_country?(value)
     !Rails.configuration.countries
+          .filter { |country| !country['blocked'] }
           .find_index { |country| country['value'] == value }
           .nil?
   end

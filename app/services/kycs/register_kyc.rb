@@ -33,9 +33,9 @@ module Kycs
         required(:birthdate)
           .filled(:date?, :birthdate?)
         required(:country_of_residence)
-          .filled(:str?, :country?, max_size?: 50)
+          .filled(:str?, :legal_country?, max_size?: 50)
         required(:citizenship)
-          .filled(:str?, :country?, max_size?: 50)
+          .filled(:str?, :legal_country?, max_size?: 50)
       end
     end
 

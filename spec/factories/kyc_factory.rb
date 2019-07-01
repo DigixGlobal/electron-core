@@ -10,8 +10,8 @@ FactoryBot.define do
     first_name { generate(:first_name) }
     last_name { generate(:first_name) }
     birthdate { generate(:birthdate) }
-    citizenship { generate(:country_value) }
-    residence_country { generate(:country_value) }
+    citizenship { generate(:unblocked_country_value) }
+    residence_country { generate(:unblocked_country_value) }
 
     factory :kyc_tier_2 do
       residence_proof_type { generate(:kyc_residence_proof_type) }

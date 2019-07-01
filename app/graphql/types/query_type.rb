@@ -8,6 +8,12 @@ module Types
     field :tnc, Types::Tnc::TncType,
           resolver: Resolvers::TncResolver,
           description: 'Get the application TnC'
+    field :validation, Types::ValidationType,
+          null: false,
+          description: 'Field validations for the application'
+    def validation
+      {}
+    end
 
     field :current_user, Types::User::UserType,
           resolver: Resolvers::CurrentUserResolver,
