@@ -18,7 +18,7 @@ module GraphiQLRailsEditorsControllerDecorator
       GraphiQL::Rails.config.headers['accessToken'] = ->(context) { user_auth_token['accessToken'] }
       GraphiQL::Rails.config.headers['client'] = ->(context) { user_auth_token['client'] }
       GraphiQL::Rails.config.headers['uid'] = ->(context) { user_auth_token['uid'] }
-      GraphiQL::Rails.config.headers['X-Forwarded-For'] = ->(context) { '127.0.0.1' }
+      GraphiQL::Rails.config.headers['X-Forwarded-For'] = ->(context) { params.fetch(:ip_address, '127.0.0.1') }
 
       GraphiQL::Rails.config.logo = "Current User: #{user.email}"
       GraphiQL::Rails.config.title = 'Electron API GraphiQL'
@@ -26,7 +26,7 @@ module GraphiQLRailsEditorsControllerDecorator
       GraphiQL::Rails.config.headers['accessToken'] = ->(context) { '' }
       GraphiQL::Rails.config.headers['client'] = ->(context) { '' }
       GraphiQL::Rails.config.headers['uid'] = ->(context) { '' }
-      GraphiQL::Rails.config.headers['X-Forwarded-For'] = ->(context) { '127.0.0.1' }
+      GraphiQL::Rails.config.headers['X-Forwarded-For'] = ->(context) { params.fetch(:ip_address, '127.0.0.1') }
 
       GraphiQL::Rails.config.logo = 'No Current User. Add the query param `user_id` and restart if you need it.'
       GraphiQL::Rails.config.title = 'Electron API GraphiQL (UNAUTHORIZED)'
