@@ -30,6 +30,7 @@ services:
       - DB_HOST=mysql
       - DB_USER=root
       - DB_PASSWORD=electron
+      - PORTAL_URI=http://localhost:5000
     volumes:
       - .:/app
       - bundler_gems:/usr/local/bundle/
