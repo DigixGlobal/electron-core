@@ -6,15 +6,15 @@ module Resolvers
 
     argument :blocked, Boolean,
              required: false,
-             default_value: false,
              description: <<~EOS
                Filter countries if they are blocked.
                 By default, this returns the usable or legal countries.
              EOS
 
-    def resolve(blocked: false)
-      Rails.configuration.countries
-           .select { |country| country['blocked'] == blocked }
+    def resolve(blocked: nil)
+      countries = Rails.configuration.countries
+
+      blocked.nil? ? countries : countries.select { |country| country['blocked'] == blocked }
     end
   end
 end

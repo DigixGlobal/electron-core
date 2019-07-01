@@ -748,7 +748,7 @@ type Query {
     Filter countries if they are blocked.
      By default, this returns the usable or legal countries.
     """
-    blocked: Boolean = false
+    blocked: Boolean
   ): [Country!]!
 
   """
