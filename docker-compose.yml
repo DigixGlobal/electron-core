@@ -5,7 +5,7 @@ services:
     command: --default-authentication-plugin=mysql_native_password
     restart: always
     ports:
-      - "23306:3306"
+      - '23306:3306'
     volumes:
       - db:/var/lib/mysql
     environment:
@@ -17,7 +17,7 @@ services:
     image: tophfr/mailcatcher
     restart: always
     ports:
-      - "23080:80"
+      - '23080:80'
 
   web:
     build:
@@ -30,12 +30,12 @@ services:
       - DB_HOST=mysql
       - DB_USER=root
       - DB_PASSWORD=electron
-      - PORTAL_URI=http://localhost:5000
+      - PORTAL_URI=https://localhost:5000/#/portal/forgot-password/reset-form
     volumes:
       - .:/app
       - bundler_gems:/usr/local/bundle/
     ports:
-      - "23000:3000"
+      - '23000:3000'
     links:
       - mailcatcher:mailcatcher
       - mysql:mysql
