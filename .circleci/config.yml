@@ -6,6 +6,7 @@ jobs:
         - master
         - develop
         - /feature\/.*/
+        - /fix\/.*/
     working_directory: ~/electron-core
     docker:
       - image: circleci/ruby:2.6.2-stretch

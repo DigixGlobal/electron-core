@@ -30,7 +30,8 @@ services:
       - DB_HOST=mysql
       - DB_USER=root
       - DB_PASSWORD=electron
-      - PORTAL_URI=https://localhost:5000/#/portal/forgot-password/reset-form
+      - CONFIRMATION_URI=https://localhost:5000/#/portal/register/confirmation
+      - RESET_PASSWORD_URI=https://localhost:5000/#/portal/forgot-password/reset-form
     volumes:
       - .:/app
       - bundler_gems:/usr/local/bundle/

@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class Users::PasswordsController < Devise::PasswordsController
-  PORTAL_URI = ENV.fetch('PORTAL_URI') { 'http://localhost:5000' }
+  RESET_PASSWORD_URI = ENV.fetch('RESET_PASSWORD_URI') { 'https://localhost:5000/#/portal/forgot-password/reset-form' }
 
   def edit
     token = super
@@ -12,7 +12,7 @@ class Users::PasswordsController < Devise::PasswordsController
               'user_not_found'
             end
 
-    redirect_to "#{PORTAL_URI}?reset_password_token=#{token}&error=#{error || ''}"
+    redirect_to "#{RESET_PASSWORD_URI}?reset_password_token=#{token}&error=#{error || ''}"
   end
 
   protected
@@ -27,6 +27,6 @@ class Users::PasswordsController < Devise::PasswordsController
   end
 
   def after_sending_reset_password_instructions_path_for(_resource_name)
-    PORTAL_URI
+    RESET_PASSWORD_URI
   end
 end
