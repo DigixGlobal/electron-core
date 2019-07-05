@@ -1,45 +1,20 @@
-# README
+# Electron Core
 
-# Database Setup
+Checkout the
+[wiki](https://wiki.digixdev.com/electron-development#electron-core
+"Electron Core Wiki") for more of a comprehensive guide
 
-    We will be using `electron_user` as our database user for
-    development. To create the user, run the following as database `root`.
+## Installation
 
-    ```shell
-    mysql -u root -p
-    ```
+To quickly setup with `docker`, do the following:
 
-    In the terminal, run the following:
+```
+docker network create electron
 
-    ```sql
-    GRANT ALL PRIVILEGES ON *.* TO 'electron_user'@'localhost' IDENTIFIED BY 'electron';
-    ```
+docker-compose build
+docker-compose run web bundle install
+docker-compose run web rake db:drop db:create db:migrate db:seed
+docker-compose up
+```
 
-    To exit, run the following or press `Ctrl-C Ctrl-C` or the like:
-
-    ```sql
-    \q
-    ```
-
-This README would normally document whatever steps are necessary to get the
-application up and running.
-
-Things you may want to cover:
-
-* Ruby version
-
-* System dependencies
-
-* Configuration
-
-* Database creation
-
-* Database initialization
-
-* How to run the test suite
-
-* Services (job queues, cache servers, search engines, etc.)
-
-* Deployment instructions
-
-* ...
+For the development, checkout the wiki.
