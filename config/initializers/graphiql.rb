@@ -9,28 +9,34 @@ module GraphiQLRailsEditorsControllerDecorator
   protected
 
   def set_auth_headers
-    if (user_id = params.fetch(:user_id, nil)) &&
-       (user = User.find_by(id: user_id))
-      Rails.logger.info "Using #{user.email} as `current_user`"
+    current_user =
+      if (user_id = params.fetch(:user_id, nil))
+        User.find_by(id: user_id)
+      elsif (email = params.fetch(:email, nil))
+        User.find_by(email: email)
+      end
 
-      user_auth_token = user.create_new_auth_token
+    if current_user
+      Rails.logger.info "Using #{current_user.email} as `current_user`"
+
+      user_auth_token = current_user.create_new_auth_token
 
       GraphiQL::Rails.config.headers['accessToken'] = ->(context) { user_auth_token['accessToken'] }
       GraphiQL::Rails.config.headers['client'] = ->(context) { user_auth_token['client'] }
       GraphiQL::Rails.config.headers['uid'] = ->(context) { user_auth_token['uid'] }
-      GraphiQL::Rails.config.headers['X-Forwarded-For'] = ->(context) { params.fetch(:ip_address, '127.0.0.1') }
 
-      GraphiQL::Rails.config.logo = "Current User: #{user.email}"
+      GraphiQL::Rails.config.logo = "Current User: #{current_user.email}"
       GraphiQL::Rails.config.title = 'Electron API GraphiQL'
     else
       GraphiQL::Rails.config.headers['accessToken'] = ->(context) { '' }
       GraphiQL::Rails.config.headers['client'] = ->(context) { '' }
       GraphiQL::Rails.config.headers['uid'] = ->(context) { '' }
-      GraphiQL::Rails.config.headers['X-Forwarded-For'] = ->(context) { params.fetch(:ip_address, '127.0.0.1') }
 
-      GraphiQL::Rails.config.logo = 'No Current User. Add the query param `user_id` and restart if you need it.'
+      GraphiQL::Rails.config.logo = 'No Current User. Add the query param `user_id` or `email` and restart if you need it.'
       GraphiQL::Rails.config.title = 'Electron API GraphiQL (UNAUTHORIZED)'
     end
+
+    GraphiQL::Rails.config.headers['X-Forwarded-For'] = ->(context) { params.fetch(:ip_address, '127.0.0.1') }
   end
 end
 

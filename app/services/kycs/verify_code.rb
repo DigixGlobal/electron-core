@@ -39,7 +39,7 @@ module Kycs
       block_number = block_number.to_i
       block_hash = "0x#{block_number.to_s(16)}"
 
-      this_block_number = yield(EthereumApi
+      this_block_number = yield(BlockchainApi
                           .fetch_latest_block.or(M.Failure(type: :block_not_found))
                           .fmap { |latest_block| latest_block.fetch('number', '').to_i(16) })
 
@@ -47,7 +47,7 @@ module Kycs
         return M.Failure(type: :verification_expired)
       end
 
-      this_hash = yield(EthereumApi
+      this_hash = yield(BlockchainApi
                   .fetch_block_by_block_number(block_hash).or(M.Failure(type: :block_not_found))
                   .fmap { |this_block| this_block.fetch('hash', '').slice(2..-1) })
 

@@ -29,5 +29,5 @@ module AppMatcher
     )
 
     Dry::Matcher.new(success: success_case, failure: failure_case)
-end
+  end
 end

@@ -26,7 +26,8 @@ jobs:
       - run:
           name: Install system dependencies
           command: |
-            sudo ln -sf /usr/lib/x86_64-linux-gnu/libssl.so.1.0.2 /usr/lib/x86_64-linux-gnu/libssl.so.1.0.0
+            sudo ln -sf /usr/lib/x86_64-linux-gnu/libssl.so.1.0.2 /usr/lib/x86_64-linux-gnu/libssl.so.1.0.0 &&
+            sudo apt-get install libsodium-dev
       - run:
           name: Install app dependencies
           command: |
