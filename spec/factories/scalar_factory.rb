@@ -48,4 +48,5 @@ FactoryBot.define do
   sequence(:pricefeed_name) { |_| "level_#{SecureRandom.random_number(2) + 1}" }
   sequence(:pricefeed_minimum) { |_| [0, 10, 20, 30].sample }
   sequence(:pricefeed_pair) { |_| %w[xau-usd eth-usd xbt-usd dai-usd xau-eth xau-dai xau-xbt].sample }
+  sequence(:open_pricefeed_pair) { |_| %w[xau-usd xau-eth xau-dai xau-xbt].sample }
 end

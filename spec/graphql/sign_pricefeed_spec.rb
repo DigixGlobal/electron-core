@@ -24,7 +24,7 @@ RSpec.describe 'signPricefeed mutation', type: :schema do
   end
 
   let(:key) { 'signPricefeed' }
-  let(:pair) { generate(:pricefeed_pair) }
+  let(:pair) { generate(:open_pricefeed_pair) }
   let(:pricefeed_pairs) do
     [
       {
@@ -58,10 +58,6 @@ RSpec.describe 'signPricefeed mutation', type: :schema do
   end
 
   specify 'should work with valid data' do
-    puts params.inspect
-
-    puts execute(query, params, context).to_h.inspect
-
     expect(execute(query, params, context))
       .to(have_no_graphql_errors.and(have_no_graphql_mutation_errors(key)))
   end

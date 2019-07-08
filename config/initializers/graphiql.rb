@@ -16,8 +16,6 @@ module GraphiQLRailsEditorsControllerDecorator
         User.find_by(email: email)
       end
 
-    puts ['DD', current_user, params].inspect
-
     if current_user
       Rails.logger.info "Using #{current_user.email} as `current_user`"
 

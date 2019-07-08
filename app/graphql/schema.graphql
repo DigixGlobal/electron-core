@@ -756,16 +756,6 @@ Pricefeed pair/symbols
 """
 enum PricefeedPairEnum {
   """
-  DAI to USD
-  """
-  DAI_USD
-
-  """
-  ETH to USD
-  """
-  ETH_USD
-
-  """
   XAU to DAI
   """
   XAU_DAI
@@ -784,11 +774,6 @@ enum PricefeedPairEnum {
   XAU to XBT
   """
   XAU_XBT
-
-  """
-  XBT to USD
-  """
-  XBT_USD
 }
 
 type Query {

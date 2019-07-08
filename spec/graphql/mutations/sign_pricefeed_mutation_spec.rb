@@ -6,7 +6,7 @@ module Mutations
   RSpec.describe SignPricefeedMutation do
     let(:user) { create(:user) }
     let(:mutation) { described_class.new(object: nil, context: { current_user: user }) }
-    let(:pair) { generate(:pricefeed_pair) }
+    let(:pair) { generate(:open_pricefeed_pair) }
     let(:pricefeed_pairs) do
       [
         {
