@@ -32,6 +32,8 @@ services:
       - DB_PASSWORD=electron
       - CONFIRMATION_URI=https://localhost:5000/#/portal/register/confirmation
       - RESET_PASSWORD_URI=https://localhost:5000/#/portal/forgot-password/reset-form
+      - MAILTRAP_USERNAME=$MAILTRAP_USERNAME
+      - MAILTRAP_PASSWORD=$MAILTRAP_PASSWORD
     volumes:
       - .:/app
       - bundler_gems:/usr/local/bundle/

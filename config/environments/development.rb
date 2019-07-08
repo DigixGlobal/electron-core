@@ -37,4 +37,18 @@ Rails.application.configure do
   config.active_record.verbose_query_logs = true
 
   config.file_watcher = ActiveSupport::EventedFileUpdateChecker
+
+  if (mailtrap_username = ENV.fetch('MAILTRAP_USERNAME') { nil }) &&
+     (mailtrap_password = ENV.fetch('MAILTRAP_PASSWORD') { nil })
+
+    config.action_mailer.delivery_method = :smtp
+    config.action_mailer.smtp_settings = {
+      user_name: mailtrap_username,
+      password: mailtrap_password,
+      address: 'smtp.mailtrap.io',
+      domain: 'smtp.mailtrap.io',
+      port: '2525',
+      authentication: :cram_md5
+    }
+  end
 end
