@@ -38,17 +38,18 @@ Rails.application.configure do
 
   config.file_watcher = ActiveSupport::EventedFileUpdateChecker
 
-  if (mailtrap_username = ENV.fetch('MAILTRAP_USERNAME') { nil }) &&
-     (mailtrap_password = ENV.fetch('MAILTRAP_PASSWORD') { nil })
+  if (google_username = ENV.fetch('GOOGLE_USERNAME') { nil }) &&
+     (google_password = ENV.fetch('GOOGLE_PASSWORD') { nil })
 
     config.action_mailer.delivery_method = :smtp
     config.action_mailer.smtp_settings = {
-      user_name: mailtrap_username,
-      password: mailtrap_password,
-      address: 'smtp.mailtrap.io',
-      domain: 'smtp.mailtrap.io',
-      port: '2525',
-      authentication: :cram_md5
+      user_name: google_username,
+      password: google_password,
+      address: 'smtp.gmail.com',
+      domain: 'hello.world.com',
+      port: '587',
+      authentication: 'plain',
+      enable_starttls_auto: true
     }
   end
 end
