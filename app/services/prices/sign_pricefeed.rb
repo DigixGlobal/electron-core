@@ -9,7 +9,7 @@ module Prices
     PRICEFEED_PAIRS = %w[
       xau-usd eth-usd xbt-usd dai-usd xau-eth xau-dai xau-xbt
     ].freeze
-    PRICEFEED_SECRET_MNEMONIC = ENV.fetch('PRICEFEED_SECRET_MNEMONIC') { '58da5aab1b4166f53046691fdd54ff18e178c855a0baef8006eaf118d5dd2ea7cfbeca142aa865947a3051ef5c3b06528be56beeb7afa500b6abd96146d870c8' }
+    PRICEFEED_SECRET_MNEMONIC = ENV.fetch('SECRET_MNEMONIC') { 'cry segment blue hello bid rain sheriff educate couple random office heavy credit borrow sugar shrimp cousin creek boil heavy edit credit shaft arrow couple right boat idea fashion rack screen equip grace crack army gather green radar occur change debris canvas flip silent chaos rack talk holiday give climb success give drip cost lumber almost cry situate assist second credit box sheriff proud cube book sudden gather globe october thunder erosion cry reason off skull casino radar office chase coral loan mirror security chaos broken sugar charge cushion canyon assist general crime grape three cry' }
     PRICEFEED_DELIMITER = 0x3a.chr
 
     step :find_by_user_id

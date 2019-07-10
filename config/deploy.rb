@@ -34,7 +34,7 @@ set :linked_files, %w[.env]
 set :config_files, fetch(:linked_files)
 
 namespace :deploy do
-  before 'deploy:check:linked_files', 'config:push'
+  # before 'deploy:check:linked_files', 'config:push'
 
   before 'deploy', 'rvm1:install:rvm'
   before 'deploy', 'rvm1:install:ruby'
