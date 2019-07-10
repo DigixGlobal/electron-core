@@ -34,11 +34,25 @@ set :linked_files, %w[.env]
 set :config_files, fetch(:linked_files)
 
 namespace :deploy do
-  # before 'deploy:check:linked_files', 'config:push'
+  before 'deploy:check:linked_files', 'config:push'
 
   before 'deploy', 'rvm1:install:rvm'
   before 'deploy', 'rvm1:install:ruby'
 
   before 'check:linked_files', 'puma:config'
   after 'deploy', 'puma:restart'
+end
+
+namespace :electron do
+  desc 'Run electron task.'
+  task :fetch_vault_key do |_task, args|
+    on roles(:app) do
+      within current_path.to_s do
+        with rails_env: :production do
+          index = args.with_defaults(index: '0')[:index].to_i
+          run "bin/rake  electron:fetch_vault_key[#{index}]"
+        end
+      end
+    end
+  end
 end

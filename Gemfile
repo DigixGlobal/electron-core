@@ -26,6 +26,7 @@ group :development do
   gem 'capistrano-nginx', '~> 1.0', require: false
   gem 'capistrano-rails', '~> 1.4', require: false
   gem 'capistrano-rails-console', '~> 2.3', require: false
+  gem 'capistrano-rake', '~> 0.2.0', require: false
   gem 'capistrano-upload-config', '~> 0.8.2', require: false
   gem 'capistrano3-nginx', '~> 3.0', require: false
   gem 'capistrano3-puma', '~> 3.1', require: false
@@ -70,7 +71,7 @@ gem 'dry-struct', '~> 0.7.0'
 gem 'dry-transaction', '~> 0.13.0'
 gem 'dry-types', '~> 0.15.0'
 gem 'dry-validation', '~> 0.13.0'
-gem 'ed25519', '~> 1.2'
+gem 'ed25519', '>= 1.2'
 gem 'factory_bot', '~> 5.0.2'
 gem 'factory_bot_rails', '~> 5.0.1'
 gem 'faker', '>= 1.9.1', require: false
