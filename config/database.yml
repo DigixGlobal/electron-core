@@ -18,4 +18,9 @@ test:
 
 production:
   <<: *default
-  database: electron_prod
+  host: <%= ENV.fetch("DB_HOST") %>
+  port: <%= ENV.fetch("DB_PORT") %>
+  socket: <%= ENV.fetch("DB_SOCKET") %>
+  database: <%= ENV.fetch("DB_NAME") %>
+  username: <%= ENV.fetch("DB_USER") %>
+  password: <%= ENV.fetch("DB_PASSWORD") %>

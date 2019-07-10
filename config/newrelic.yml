@@ -1,9 +1,7 @@
 common: &default_settings
-  license_key: <PASTE LICENSE KEY HERE>
+  license_key: <%= ENV.fetch("NEW_RELIC_LICENSE_KEY") { '' } %>
   app_name: Electron Core
   log_level: info
-  # To disable the agent regardless of other settings, uncomment the following:
-  # agent_enabled: false
 
 development:
   <<: *default_settings
@@ -13,9 +11,7 @@ test:
   <<: *default_settings
   monitor_mode: false
 
-staging:
-  <<: *default_settings
-  app_name: Electron Core (Staging)
-
 production:
   <<: *default_settings
+  license_key: <%= ENV.fetch("NEW_RELIC_LICENSE_KEY") %>
+  app_name: <%= ENV.fetch("NEW_RELIC_APP_NAME")  %>

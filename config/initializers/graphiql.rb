@@ -40,4 +40,6 @@ module GraphiQLRailsEditorsControllerDecorator
   end
 end
 
-GraphiQL::Rails::EditorsController.send :prepend, GraphiQLRailsEditorsControllerDecorator
+unless Rails.env.production?
+  GraphiQL::Rails::EditorsController.send :prepend, GraphiQLRailsEditorsControllerDecorator
+end

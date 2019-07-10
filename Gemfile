@@ -16,13 +16,21 @@ group :development, :test do
   gem 'awesome_print', '~> 1.8.0', require: false
   gem 'brakeman', '~> 4.5.1', require: false
   gem 'byebug', platforms: %i[mri mingw x64_mingw]
-  gem 'faker', '>= 1.9.1', require: false
   gem 'graphiql-rails', '~> 1.7.0'
   gem 'mailcatcher', '~> 0.2.4'
 end
 
 group :development do
+  gem 'capistrano', '~> 3.11', require: false
+  gem 'capistrano-bundler', '~> 1.6', require: false
+  gem 'capistrano-nginx', '~> 1.0', require: false
+  gem 'capistrano-rails', '~> 1.4', require: false
+  gem 'capistrano-rails-console', '~> 2.3', require: false
+  gem 'capistrano-upload-config', '~> 0.8.2', require: false
+  gem 'capistrano3-nginx', '~> 3.0', require: false
+  gem 'capistrano3-puma', '~> 3.1', require: false
   gem 'listen', '>= 3.0.5', '< 3.2.0'
+  gem 'rvm1-capistrano3', '~> 1.4', require: false
   gem 'spring', '~> 2.0.2'
   gem 'spring-watcher-listen', '~> 2.0.0'
 end
@@ -53,6 +61,7 @@ gem 'devise', '~> 4.6.2'
 gem 'devise_token_auth', '~> 1.1.0'
 gem 'digix-eth', '~> 0.5.6', require: 'eth'
 gem 'discard', '~> 1.1.0'
+gem 'dotenv-rails', '~> 2.7'
 gem 'dry-logic', '~> 0.6.1'
 gem 'dry-matcher', '~> 0.7.0'
 gem 'dry-monads', '~> 1.2.0'
@@ -60,8 +69,10 @@ gem 'dry-struct', '~> 0.7.0'
 gem 'dry-transaction', '~> 0.13.0'
 gem 'dry-types', '~> 0.15.0'
 gem 'dry-validation', '~> 0.13.0'
+gem 'ed25519', '~> 1.2'
 gem 'factory_bot', '~> 5.0.2'
 gem 'factory_bot_rails', '~> 5.0.1'
+gem 'faker', '>= 1.9.1', require: false
 gem 'faraday', '~> 0.15.4'
 gem 'faraday_json', '~> 0.1.4'
 gem 'fastimage', '~> 2.1.5'
