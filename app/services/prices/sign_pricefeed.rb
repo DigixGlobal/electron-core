@@ -56,11 +56,9 @@ module Prices
     end
 
     def fetch_vault(**attrs)
-      seed_phrase = Bitcoin::Trezor::Mnemonic.to_mnemonic(PRICEFEED_SECRET_MNEMONIC)
-
       M.Success(
         **attrs,
-        vault: Eth::Vault.new(secret_seed_phrase: seed_phrase)
+        vault: Eth::Vault.new(secret_seed_phrase: PRICEFEED_SECRET_MNEMONIC)
       )
     rescue StandardError
       M.Failure(type: :vault_not_found)
