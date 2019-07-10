@@ -49,6 +49,7 @@ end
 
 group :production do
   gem 'cloudflare-rails', '~> 0.4.0'
+  gem 'postmark-rails', '~> 0.19.0'
 end
 
 # Windows does not include zoneinfo files, so bundle the tzinfo-data gem
