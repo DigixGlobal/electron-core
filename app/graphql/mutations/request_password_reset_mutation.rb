@@ -34,6 +34,10 @@ module Mutations
         m.failure(:user_not_found) do
           form_error(KEY, 'User not found')
         end
+
+        m.failure do
+          form_error(KEY, 'Email could not be sent')
+        end
       end
     end
   end
