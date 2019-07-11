@@ -3,7 +3,7 @@
 Devise.setup do |config|
   # config.parent_controller = 'DeviseController'
 
-  config.mailer_sender = 'support@electron.com'
+  config.mailer_sender = ENV.fetch('MAIL_FROM') { 'support@electron.com' }
   config.mailer = 'Devise::Mailer'
   config.parent_mailer = 'ActionMailer::Base'
 

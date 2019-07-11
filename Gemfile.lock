@@ -57,6 +57,7 @@ GEM
       activerecord (>= 4.0, < 5.3)
     awesome_print (1.8.0)
     bcrypt (3.1.13)
+    bcrypt_pbkdf (1.0.1)
     bitcoin-ruby (0.0.11)
     bootsnap (1.4.4)
       msgpack (~> 1.0)
@@ -443,6 +444,7 @@ PLATFORMS
 DEPENDENCIES
   audited (~> 4.8.0)
   awesome_print (~> 1.8.0)
+  bcrypt_pbkdf (< 2.0)
   bootsnap (>= 1.1.0)
   brakeman (~> 4.5.1)
   byebug
@@ -470,7 +472,7 @@ DEPENDENCIES
   dry-transaction (~> 0.13.0)
   dry-types (~> 0.15.0)
   dry-validation (~> 0.13.0)
-  ed25519 (>= 1.2)
+  ed25519 (< 2.0)
   email_spec (~> 2.2.0)
   factory_bot (~> 5.0.2)
   factory_bot_rails (~> 5.0.1)
