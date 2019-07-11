@@ -29,7 +29,11 @@ module Types
       end
 
       def eth_address_change
-        AccountTypes::EthAddressChangeEntity.from_model(context[:current_user])
+        change = AccountTypes::EthAddressChangeEntity.from_model(context[:current_user])
+
+        return nil unless change.eth_address
+
+        change
       end
 
       def self.authorized?(object, context)
