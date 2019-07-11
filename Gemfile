@@ -57,7 +57,7 @@ end
 gem 'tzinfo-data', '1.2019.1'
 
 gem 'audited', '~> 4.8.0'
-gem 'bcrypt_pbkdf', '< 2.0'
+gem 'bcrypt_pbkdf', '< 2.0.0'
 gem 'cancancan', '~> 3.0.1'
 gem 'data_uri', '~> 0.1.0'
 gem 'devise', '~> 4.6.2'
@@ -72,7 +72,7 @@ gem 'dry-struct', '~> 0.7.0'
 gem 'dry-transaction', '~> 0.13.0'
 gem 'dry-types', '~> 0.15.0'
 gem 'dry-validation', '~> 0.13.0'
-gem 'ed25519', '< 2.0'
+gem 'ed25519', '< 2.0.0'
 gem 'factory_bot', '~> 5.0.2'
 gem 'factory_bot_rails', '~> 5.0.1'
 gem 'faker', '>= 1.9.1', require: false
