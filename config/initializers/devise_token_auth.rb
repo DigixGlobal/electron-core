@@ -8,6 +8,7 @@ DeviseTokenAuth.setup do |config|
                            expiry: 'expiry',
                            uid: 'uid',
                            'token-type': 'tokenType' }
+  config.remove_tokens_after_password_reset = true
 end
 
 Devise.setup do |config|

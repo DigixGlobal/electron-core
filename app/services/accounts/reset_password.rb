@@ -54,6 +54,14 @@ module Accounts
         attrs[:password_confirmation]
       )
 
+      unless user.tokens.blank?
+        user.tokens.each do |client, _token|
+          user.tokens[client]['expiry'] = (Time.zone.now - 10).to_i
+        end
+
+        user.save!
+      end
+
       M.Success(user)
     end
 

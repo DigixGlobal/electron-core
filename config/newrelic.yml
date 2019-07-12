@@ -13,5 +13,7 @@ test:
 
 production:
   <<: *default_settings
+  monitor_mode: true
+  agent_enabled: true
   license_key: <%= ENV.fetch("NEW_RELIC_LICENSE_KEY") %>
   app_name: <%= ENV.fetch("NEW_RELIC_APP_NAME")  %>

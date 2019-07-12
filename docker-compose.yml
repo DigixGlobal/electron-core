@@ -23,7 +23,8 @@ services:
     build:
       context: .
       dockerfile: Dockerfile.dev
-    entrypoint: /app/docker-entrypoint.sh bundle exec rails s -b '0.0.0.0'
+    command: bundle exec rails s -b '0.0.0.0'
+    entrypoint: /app/docker-entrypoint.sh
     environment:
       - MAILER_HOST=mailcatcher
       - MAILER_PORT=25
