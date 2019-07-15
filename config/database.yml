@@ -18,4 +18,9 @@ test:
 
 production:
   <<: *default
-  database: electron_prod
+  host: <%= ENV["DB_HOST"] %>
+  port: <%= ENV["DB_PORT"] %>
+  socket: <%= ENV["DB_SOCKET"] %>
+  database: <%= ENV["DB_NAME"] %>
+  username: <%= ENV["DB_USER"] %>
+  password: <%= ENV["DB_PASSWORD"] %>

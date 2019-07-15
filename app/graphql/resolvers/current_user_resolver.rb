@@ -11,6 +11,10 @@ module Resolvers
       end
     end
 
+    def self.unauthorized_object(_error)
+      raise GraphQL::ExecutionError, 'Unauthorized access'
+    end
+
     def self.authorized?(object, context)
       super && context.fetch(:current_user, nil)
     end

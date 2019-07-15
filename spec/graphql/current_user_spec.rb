@@ -15,6 +15,10 @@ RSpec.describe 'currentUser query', type: :schema do
             id
             email
             ethAddress
+            ethAddressChange {
+              ethAddress
+              status
+            }
             tncVersion
           }
         }
@@ -29,6 +33,44 @@ RSpec.describe 'currentUser query', type: :schema do
 
     specify 'should fail without a current user' do
       expect(execute(query, {})).to(have_graphql_errors)
+    end
+  end
+
+  describe 'eth address change type' do
+    let(:user) do
+      create(
+        :user,
+        new_eth_address: generate(:eth_address),
+        change_eth_address_status: :pending
+      )
+    end
+    let(:query) do
+      <<~GQL
+        query {
+          currentUser {
+            ethAddressChange {
+              ethAddress
+              status
+            }
+          }
+        }
+      GQL
+    end
+
+    specify 'should work' do
+      result = execute(query, {}, context)
+
+      expect(result).to(have_no_graphql_errors)
+      expect(result.dig('data', 'currentUser', 'ethAddressChange')).to(be_truthy)
+    end
+
+    specify 'should work without any change' do
+      user.update_attributes(new_eth_address: nil, change_eth_address_status: nil)
+
+      result = execute(query, {}, context)
+
+      expect(result).to(have_no_graphql_errors)
+      expect(result.dig('data', 'currentUser', 'ethAddressChange')).to(be_falsy)
     end
   end
 

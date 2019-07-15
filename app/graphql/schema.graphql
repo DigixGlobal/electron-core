@@ -291,7 +291,7 @@ An eth address represented by a `String`.
 scalar EthAddress
 
 """
-Changes in an user's Eth addressx
+Changes in an user's Eth address
 """
 type EthAddressChange {
   """
