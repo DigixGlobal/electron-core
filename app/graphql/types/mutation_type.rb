@@ -8,7 +8,6 @@ module Types
     field :reset_password, mutation: Mutations::ResetPasswordMutation
 
     field :draft_tier2_kyc, mutation: Mutations::DraftTier2KycMutation
-    field :submit_applying_kyc, mutation: Mutations::SubmitApplyingKycMutation
     field :approve_applying_kyc, mutation: Mutations::ApproveApplyingKycMutation
     field :reject_applying_kyc, mutation: Mutations::RejectApplyingKycMutation
 

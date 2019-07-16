@@ -299,7 +299,6 @@ RSpec.describe KycService, type: :service do
           .to(include(
                 status: eq(:drafted.to_s),
                 residence_proof_type: eq(params[:residence_proof_type]),
-                residence_proof_image: be_truthy,
                 residence_postal_code: eq(params[:residence_postal_code]),
                 residence_line_1: eq(params[:residence_line_1]),
                 residence_line_2: eq(params[:residence_line_2]),
@@ -310,6 +309,13 @@ RSpec.describe KycService, type: :service do
                   eq(params[:identification_proof_expiration_date]),
                 identification_pose_image: be_truthy
               ))
+
+        expect(value.residence_proof_image[:original].data_uri.to_s)
+          .to(eq(params[:residence_proof_image].to_s))
+        expect(value.identification_proof_image[:original].data_uri.to_s)
+          .to(eq(params[:identification_proof_image].to_s))
+        expect(value.identification_pose_image[:original].data_uri.to_s)
+          .to(eq(params[:identification_pose_image].to_s))
       end
 
       it 'should still work with the same params' do
@@ -324,10 +330,10 @@ RSpec.describe KycService, type: :service do
 
         expect(result).to(be_success)
 
-        expect(result.value!.residence_line_1)
-          .to(eq(new_params[:residence_line_1]))
-        expect(result.value!.residence_line_1)
-          .not_to(eq(params[:residence_line_1]))
+        value = result.value!
+
+        expect(value.residence_line_1).to(eq(new_params[:residence_line_1]))
+        expect(value.residence_line_1).not_to(eq(params[:residence_line_1]))
       end
     end
 
@@ -591,29 +597,59 @@ RSpec.describe KycService, type: :service do
       expect(result.value!.status).to(eq(:pending.to_s))
     end
 
-    it 'should fail with missing user' do
-      expect(KycService.submit_applying_user_kyc(SecureRandom.uuid))
-        .to(has_failure_type(:user_not_found))
-    end
+    context 'can fail' do
+      example 'with missing fields' do
+        kyc = user.kyc
 
-    it 'should fail with invalid user' do
-      invalid_user = create(:kyc_officer_user)
+        %i[
+          form_step
+          residence_proof_type
+          residence_city
+          residence_postal_code
+          residence_line_1
+          residence_line_2
+          identification_proof_number
+          identification_proof_type
+          identification_proof_expiration_date
+          residence_proof_image
+          identification_pose_image
+          identification_proof_image
+        ].each do |key|
+          ApplicationRecord.transaction do
+            kyc.update_attribute(key, nil)
 
-      expect(KycService.submit_applying_user_kyc(invalid_user.id))
-        .to(has_failure_type(:unauthorized_action))
-    end
+            expect(KycService.submit_applying_user_kyc(user.id))
+              .to(has_invalid_data_error_field(key))
 
-    it 'should fail with user without an eth address' do
-      invalid_user = create(:drafted_kyc_tier_2).user
-      invalid_user.update_attribute(:eth_address, nil)
+            raise ActiveRecord::Rollback
+          end
+        end
+      end
 
-      expect(KycService.submit_applying_user_kyc(invalid_user.id))
-        .to(has_failure_type(:unauthorized_action))
-    end
+      example 'with missing user' do
+        expect(KycService.submit_applying_user_kyc(SecureRandom.uuid))
+          .to(has_failure_type(:user_not_found))
+      end
 
-    it 'should fail if repeated' do
-      expect(KycService.submit_applying_user_kyc(user.id)).to(be_success)
-      expect(KycService.submit_applying_user_kyc(user.id)).to(be_failure)
+      example 'with invalid user' do
+        invalid_user = create(:kyc_officer_user)
+
+        expect(KycService.submit_applying_user_kyc(invalid_user.id))
+          .to(has_failure_type(:unauthorized_action))
+      end
+
+      example 'with user without an eth address' do
+        invalid_user = create(:drafted_kyc_tier_2).user
+        invalid_user.update_attribute(:eth_address, nil)
+
+        expect(KycService.submit_applying_user_kyc(invalid_user.id))
+          .to(has_failure_type(:unauthorized_action))
+      end
+
+      example 'should fail if repeated' do
+        expect(KycService.submit_applying_user_kyc(user.id)).to(be_success)
+        expect(KycService.submit_applying_user_kyc(user.id)).to(be_failure)
+      end
     end
   end
 

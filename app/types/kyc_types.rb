@@ -83,6 +83,7 @@ module KycTypes
   class Tier2KycEntity < SupportTypes::Entity
     attribute(:user_id, Types::String)
     attribute(:officer_id, Types::String)
+    attribute(:form_step, Types::Integer)
 
     attribute(:status, Types::String)
     attribute(:expiration_date, Types::Date)
@@ -108,6 +109,7 @@ module KycTypes
         id: model.id,
         user_id: model.user_id,
         officer_id: model.officer_id,
+        form_step: model.form_step,
 
         status: model.applying_status,
         expiration_date: model.expiration_date,

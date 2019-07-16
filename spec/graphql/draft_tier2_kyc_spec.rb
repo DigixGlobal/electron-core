@@ -3,24 +3,29 @@
 require 'rails_helper'
 
 RSpec.describe 'draftTier2Kyc mutation', type: :schema do
+  let(:submit) { false }
   let(:context) { { current_user: create(:user_with_kyc) } }
   let(:query) do
     <<~GQL
       mutation(
-        $residenceProofType: KycResidenceProofTypeEnum!
-        $residenceProofImage: DataUrl!
-        $residenceCity: String!
-        $residencePostalCode: String!
-        $residenceLine1: String!
-        $residenceLine2: String!
-        $identificationProofNumber: String!
-        $identificationProofType: KycIdentificationProofTypeEnum!
-        $identificationProofImage: DataUrl!
-        $identificationProofExpirationDate: Date!
-        $identificationPoseImage: DataUrl!
+        $formStep: PositiveInteger!
+        $submit: Boolean
+        $residenceProofType: KycResidenceProofTypeEnum
+        $residenceProofImage: DataUrl
+        $residenceCity: String
+        $residencePostalCode: String
+        $residenceLine1: String
+        $residenceLine2: String
+        $identificationProofNumber: String
+        $identificationProofType: KycIdentificationProofTypeEnum
+        $identificationProofImage: DataUrl
+        $identificationProofExpirationDate: Date
+        $identificationPoseImage: DataUrl
       ) {
         draftTier2Kyc(
           input: {
+            formStep: $formStep
+            submit: $submit
             residenceProofType: $residenceProofType
             residenceProofImage: $residenceProofImage
             residenceCity: $residenceCity
@@ -41,6 +46,7 @@ RSpec.describe 'draftTier2Kyc mutation', type: :schema do
           applyingKyc {
             createdAt
             id
+            formStep
             identificationPoseImage {
               original {
                 contentType
@@ -95,14 +101,30 @@ RSpec.describe 'draftTier2Kyc mutation', type: :schema do
 
   let(:key) { 'draftTier2Kyc' }
 
-  specify 'should work with valid data' do
-    result = execute(query, params_for(:draft_tier2_kyc_params), context)
+  context 'without submitting' do
+    let(:submit) { false }
+    specify 'should work with valid data' do
+      result = execute(query, params_for(:draft_tier2_kyc_params), context)
 
-    expect(result).to(have_no_graphql_errors.and(have_no_graphql_mutation_errors(key)))
+      expect(result).to(have_no_graphql_errors.and(have_no_graphql_mutation_errors(key)))
+    end
+
+    specify 'should fail with empty data' do
+      expect(execute(query, {}, context)).to(have_graphql_errors(key))
+    end
   end
 
-  specify 'should fail with empty data' do
-    expect(execute(query, {}, context)).to(have_graphql_errors(key))
+  context 'with submitting' do
+    let(:submit) { true }
+    specify 'should work with valid data' do
+      result = execute(query, params_for(:draft_tier2_kyc_params), context)
+
+      expect(result).to(have_no_graphql_errors.and(have_no_graphql_mutation_errors(key)))
+    end
+
+    specify 'should fail with empty data' do
+      expect(execute(query, {}, context)).to(have_graphql_errors(key))
+    end
   end
 
   specify 'should fail without a current user ' do

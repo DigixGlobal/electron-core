@@ -4,6 +4,7 @@ require 'faker'
 
 FactoryBot.define do
   sequence(:positive_float) { |_| Faker::Commerce.price }
+  sequence(:positive_integer) { |_| 1 + SecureRandom.random_number(50) }
 
   sequence(:boolean) { |_| Faker::Boolean.boolean }
   sequence(:uid) { |_| SecureRandom.random_number(1_000_000) }

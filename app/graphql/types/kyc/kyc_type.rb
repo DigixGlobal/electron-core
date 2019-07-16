@@ -24,7 +24,6 @@ module Types
               If the user has drafted a KYC, this will be that KYC.
                Otherwise, this is just `null`
             EOS
-
       field :first_name, String,
             null: true,
             description: 'First name of the user'
