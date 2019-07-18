@@ -174,13 +174,21 @@ input DraftTier2KycMutationInput {
   clientMutationId: String
 
   """
+  An integer indicating the current step of the wizard of process.
+
+  Although it has no semantic meaning, this is the only required field
+   to indicate progress.
+  """
+  formStep: PositiveInteger!
+
+  """
   Image data URL to prove identification is valid
 
   Validations:
   - Maximum of 10 MB size
   - JPEG or PNG files only
   """
-  identificationPoseImage: DataUrl!
+  identificationPoseImage: DataUrl
 
   """
   Expiration date of the ID.
@@ -188,7 +196,7 @@ input DraftTier2KycMutationInput {
   Validations:
   - Must not be expired or a future date
   """
-  identificationProofExpirationDate: Date!
+  identificationProofExpirationDate: Date
 
   """
   Image data URL to prove personal identification.
@@ -197,7 +205,7 @@ input DraftTier2KycMutationInput {
   - Maximum of 10 MB size
   - JPEG, PNG or PDF files only
   """
-  identificationProofImage: DataUrl!
+  identificationProofImage: DataUrl
 
   """
   Code/number of the ID.
@@ -205,12 +213,12 @@ input DraftTier2KycMutationInput {
   Validations:
   - Maximum of 50 characters
   """
-  identificationProofNumber: String!
+  identificationProofNumber: String
 
   """
   Type of ID used
   """
-  identificationProofType: KycIdentificationProofTypeEnum!
+  identificationProofType: KycIdentificationProofTypeEnum
 
   """
   City address of the user.
@@ -218,7 +226,7 @@ input DraftTier2KycMutationInput {
   Validations:
   - Maximum of 250 characters
   """
-  residenceCity: String!
+  residenceCity: String
 
   """
   Descriptive combination of unit/block/house number and street name of the user.
@@ -226,7 +234,7 @@ input DraftTier2KycMutationInput {
   Validations:
   - Maximum of 1000 characters
   """
-  residenceLine1: String!
+  residenceLine1: String
 
   """
   Extra descriptions about the address such as landmarks or corners.
@@ -244,7 +252,7 @@ input DraftTier2KycMutationInput {
   - Must be comprised of alphanumeric characters (`A-Z0-9`), spaces and dashes (`-`)
   - Must not end or begin with a dash
   """
-  residencePostalCode: String!
+  residencePostalCode: String
 
   """
   Image data URL to prove personal residence
@@ -253,12 +261,21 @@ input DraftTier2KycMutationInput {
   - Maximum of 10 MB size
   - JPEG, PNG or PDF files only
   """
-  residenceProofImage: DataUrl!
+  residenceProofImage: DataUrl
 
   """
   Kind/type of proof presented for residence
   """
-  residenceProofType: KycResidenceProofTypeEnum!
+  residenceProofType: KycResidenceProofTypeEnum
+
+  """
+  A flag to indicate to submit the draft after updating it.
+   Usually, true when it is the final operation in a wizard.
+
+  Before setting this true, all fields should be completed or
+   this mutation will fail.
+  """
+  submit: Boolean
 }
 
 """
@@ -588,6 +605,11 @@ type KycTier2 {
   createdAt: ISO8601DateTime!
 
   """
+  An integer indicating the current step of the wizard of process.
+  """
+  formStep: PositiveInteger!
+
+  """
   Type ID
   """
   id: ID!
@@ -595,57 +617,57 @@ type KycTier2 {
   """
   Image of identification pose
   """
-  identificationPoseImage: KycImage!
+  identificationPoseImage: KycImage
 
   """
   Expiration date of the identification proof
   """
-  identificationProofExpirationDate: Date!
+  identificationProofExpirationDate: Date
 
   """
   Image of the identification proof
   """
-  identificationProofImage: KycImage!
+  identificationProofImage: KycImage
 
   """
   Number of the identification proof
   """
-  identificationProofNumber: String!
+  identificationProofNumber: String
 
   """
   Type of the identification_proof
   """
-  identificationProofType: KycIdentificationProofTypeEnum!
+  identificationProofType: KycIdentificationProofTypeEnum
 
   """
   City of residence
   """
-  residenceCity: String!
+  residenceCity: String
 
   """
   Line 1 address of residence
   """
-  residenceLine1: String!
+  residenceLine1: String
 
   """
   Line 2 address of residence
   """
-  residenceLine2: String!
+  residenceLine2: String
 
   """
   Postal code of residence
   """
-  residencePostalCode: String!
+  residencePostalCode: String
 
   """
   Image of residence proof
   """
-  residenceProofImage: KycImage!
+  residenceProofImage: KycImage
 
   """
   Type of residence proof
   """
-  residenceProofType: KycResidenceProofTypeEnum!
+  residenceProofType: KycResidenceProofTypeEnum
 
   """
   Current status of the KYC request
@@ -696,6 +718,7 @@ type Mutation {
 
   """
   As the current user of KYC tier one, draft a tier 2 KYC to access more features of the app.
+   With the submit field true, also submit the KYC.
   """
   draftTier2Kyc(input: DraftTier2KycMutationInput!): DraftTier2KycMutationPayload
 
@@ -736,20 +759,17 @@ type Mutation {
   Given a current user, a pair and an amount, request to sign a pricefeed.
   """
   signPricefeed(input: SignPricefeedMutationInput!): SignPricefeedMutationPayload
-
-  """
-  As the current user with an drafted applying KYC,
-   submit the KYC for review from an KYC officer.
-
-  Also, the user must have set an eth address to submit.
-  """
-  submitApplyingKyc(input: SubmitApplyingKycMutationInput!): SubmitApplyingKycMutationPayload
 }
 
 """
 A float that must be non-negative. Used for currencies or prices.
 """
 scalar PositiveFloat
+
+"""
+A integer that must be non-negative. Used for step values.
+"""
+scalar PositiveInteger
 
 """
 Pricefeed pair/symbols
@@ -1170,40 +1190,6 @@ type SignedPricefeed {
   The Eth address of the signer
   """
   signer: EthAddress!
-}
-
-"""
-Autogenerated input type of SubmitApplyingKycMutation
-"""
-input SubmitApplyingKycMutationInput {
-  """
-  A unique identifier for the client performing the mutation.
-  """
-  clientMutationId: String
-}
-
-"""
-Autogenerated return type of SubmitApplyingKycMutation
-"""
-type SubmitApplyingKycMutationPayload {
-  """
-  Submitted applying KYC
-  """
-  applyingKyc: KycApplying
-
-  """
-  A unique identifier for the client performing the mutation.
-  """
-  clientMutationId: String
-
-  """
-  Mutation errors
-
-  Operation Errors:
-  - No drafted applying KYC
-  - Eth address not yet set
-  """
-  errors: [UserError!]!
 }
 
 """

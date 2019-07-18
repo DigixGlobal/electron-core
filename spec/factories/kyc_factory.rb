@@ -14,6 +14,7 @@ FactoryBot.define do
     residence_country { generate(:unblocked_country_value) }
 
     factory :kyc_tier_2 do
+      form_step { generate(:positive_integer) }
       residence_proof_type { generate(:kyc_residence_proof_type) }
       residence_city { generate(:city) }
       residence_postal_code { generate(:postal_code) }

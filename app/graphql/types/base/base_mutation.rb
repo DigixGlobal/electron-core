@@ -6,12 +6,12 @@ require 'dry-monads'
 module Types
   module Base
     class BaseMutation < GraphQL::Schema::RelayClassicMutation
-      def self.visible?(context)
-        authorized?(nil, context)
+      def self.unauthorized_object(_error)
+        raise GraphQL::ExecutionError, 'Unauthorized access'
       end
 
-      def self.accessible?(context)
-        authorized?(nil, context)
+      def self.visible?(_context)
+        true
       end
 
       def self.authorized?(_object, _context)

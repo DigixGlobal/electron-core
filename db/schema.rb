@@ -82,6 +82,7 @@ ActiveRecord::Schema.define(version: 2019_05_14_020310) do
     t.integer "applying_status", default: 0
     t.string "rejection_reason", limit: 150
     t.string "approval_txhash", limit: 80
+    t.integer "form_step"
     t.string "residence_line_1", limit: 1000
     t.string "residence_line_2", limit: 1000
     t.string "residence_city", limit: 250

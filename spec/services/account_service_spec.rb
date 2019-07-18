@@ -277,18 +277,32 @@ RSpec.describe AccountService, type: :service do
       }
     end
 
+    before do
+      SecureRandom.random_number(1..5).times do
+        user.create_new_auth_token
+      end
+    end
+
     context 'with valid token' do
       let!(:result) { AccountService.reset_password(params) }
 
       specify 'should work' do
-        expect(result).to(be_succes)
+        expect(result).to(be_success)
         expect(result.value!).to(be_instance_of(AccountTypes::UserEntity))
       end
 
       specify 'should work even if password notification email is not sent' do
         ActionMailer::Base.any_instance.stub(:mail).and_raise('ECONNREFUSED')
 
-        expect(result).to(be_succes)
+        expect(result).to(be_success)
+      end
+
+      specify 'should expire tokens' do
+        expect(result).to(be_success)
+
+        user.tokens.each do |_client, token|
+          expect(Time.zone.at(token ['expiry']) > Time.zone.now).to(be_truthy)
+        end
       end
 
       describe 'updated user' do

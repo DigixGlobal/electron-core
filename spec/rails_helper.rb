@@ -28,6 +28,7 @@ SimpleCov.start 'rails' do
   add_filter '/app/services/app_schema.rb'
   add_filter '/app/types/param_types.rb'
   add_filter '/bin/'
+  add_filter '/lib/scheduler.rb'
 end
 puts 'required simplecov'
 
