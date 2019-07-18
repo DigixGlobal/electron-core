@@ -6,7 +6,7 @@ class AddTierTwoFieldsToKycs < ActiveRecord::Migration[5.2]
       t.integer :applying_status, null: true, default: 0
       t.string :rejection_reason, limit: 150, null: true
       t.string :approval_txhash, limit: 80, null: true
-      t.integer :form_step, null: true
+      t.integer :form_step, null: true, default: 0
 
       t.string :residence_line_1, limit: 1000, null: true
       t.string :residence_line_2, limit: 1000, null: true

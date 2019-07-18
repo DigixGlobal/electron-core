@@ -86,6 +86,7 @@ RSpec.describe 'currentUser query', type: :schema do
               applyingKyc {
                 ... on KycTier2 {
                   id
+                  formStep
                   identificationPoseImage {
                     original {
                       contentType
