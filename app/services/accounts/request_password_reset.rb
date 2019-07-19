@@ -7,7 +7,7 @@ module Accounts
     M = Dry::Monads
 
     step :find_by_email
-    step :send_password_reset
+    step :send_confirmation
     map :as_entity
 
     private

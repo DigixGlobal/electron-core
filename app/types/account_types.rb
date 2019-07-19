@@ -22,13 +22,12 @@ module AccountTypes
 
   class EthAddressChangeEntity < SupportTypes::Entity
     attribute(:eth_address, Types::String)
-    attribute(:status, Types::String)
+    attribute(:sent_at, Types::Date)
 
     def self.from_model(model)
       new(
-        id: model.id,
         eth_address: model.new_eth_address,
-        status: model.change_eth_address_status
+        sent_at: model.change_eth_address_sent_at
       )
     end
   end
