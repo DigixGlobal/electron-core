@@ -20,7 +20,7 @@ Rails.application.routes.draw do
 
   get '/ethAddressChange',
       to: 'account#change_eth_address',
-      as: 'account_change_eth_addresses'
+      as: 'account_change_eth_address'
 
   post '/tier2Approval',
        to: 'kyc_processor#approve_addresses',

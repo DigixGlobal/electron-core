@@ -429,8 +429,10 @@ RSpec.describe AccountService, type: :service do
         end
 
         it 'should be correct' do
+          token = user.reload.change_eth_address_token
           expect(confirmation_email).to(deliver_to(user.email))
           expect(confirmation_email).to(have_subject('Change eth address confirmation'))
+          expect(confirmation_email).to(have_body_text(/#{token}/))
         end
       end
 

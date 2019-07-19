@@ -1,0 +1,5 @@
+<p>Hello,</p>
+
+<p>Please confirm your Eth address change to <%= @user.new_eth_address %> through the link below:</p>
+
+<p><%= link_to 'Confirm the change', url_for(controller: 'account', action: 'change_eth_address', params: {token: @token }) %></p>

@@ -4,13 +4,13 @@ require 'rails_helper'
 
 module Controllers
   RSpec.describe 'Account', type: :request do
-    def redirect_path(error)
-      "#{AccountController::CHANGE_ETH_ADDRESS_URI}?error=#{error}"
-    end
-
     describe 'GET /ethAddressChange' do
+      def redirect_path(error)
+        "#{AccountController::CHANGE_ETH_ADDRESS_URI}?error=#{error}"
+      end
+
       let(:user) { create(:user) }
-      let(:path) { account_change_eth_addresses_path }
+      let(:path) { account_change_eth_address_path }
       let(:token) do
         AccountService.request_change_eth_address(user.id, generate(:eth_address))
 
@@ -63,6 +63,14 @@ module Controllers
 
           expect(response)
             .to(redirect_to(redirect_path('token_not_found')))
+        end
+
+        example 'with API down' do
+          WebMock.reset!
+          make_request(token)
+
+          expect(response)
+            .to(redirect_to(redirect_path('request_failed')))
         end
       end
     end

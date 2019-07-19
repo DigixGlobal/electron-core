@@ -80,11 +80,11 @@ module Accounts
         return M.Failure(type: :invalid_data, errors: user.errors)
       end
 
-      M.Success(model)
+      M.Success(user: model, token: token)
     end
 
-    def send_confirmation(user)
-      UserMailer.with(user: user).change_eth_address_confirmation.deliver_now
+    def send_confirmation(user:, token:)
+      UserMailer.with(user: user, token: token).change_eth_address_confirmation.deliver_now
 
       M.Success(user)
     rescue StandardError
