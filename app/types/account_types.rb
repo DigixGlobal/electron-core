@@ -26,6 +26,7 @@ module AccountTypes
 
     def self.from_model(model)
       new(
+        id: model.id,
         eth_address: model.new_eth_address,
         sent_at: model.change_eth_address_sent_at
       )

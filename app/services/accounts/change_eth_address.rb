@@ -17,7 +17,7 @@ module Accounts
 
     private
 
-    def find_by_token(token:)
+    def find_by_token(token)
       unless (user = User.find_by(change_eth_address_token: token))
         return M.Failure(type: :token_not_found)
       end
@@ -25,21 +25,23 @@ module Accounts
       M.Success(user)
     end
 
-    def change(user)
+    def change(model)
+      old_eth_address = model.eth_address
+
       unless model.update_attributes(
-        eth_address: user.new_eth_address,
+        eth_address: model.new_eth_address,
         new_eth_address: nil,
         change_eth_address_token: nil,
         change_eth_address_sent_at: nil
       )
-        return M.Failure(type: :invalid_data, errors: user.errors)
+        return M.Failure(type: :invalid_data, errors: model.errors)
       end
 
-      M.Success(model)
+      M.Success(user: model, eth_address: old_eth_address)
     end
 
-    def broadcast(user)
-      result = KycApi.change_eth_address(user.eth_address, user.new_eth_address)
+    def broadcast(user:, eth_address:)
+      result = KycApi.change_eth_address(eth_address, user.eth_address)
 
       return result if result.failure?
 
@@ -47,7 +49,7 @@ module Accounts
     end
 
     def as_entity(user)
-      AccountTypes::EthAddressChangeEntity.from_model(user)
+      AccountTypes::UserEntity.from_model(user)
     end
   end
 end

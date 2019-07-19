@@ -3,6 +3,7 @@
 class UserMailer < ApplicationMailer
   def change_eth_address_confirmation
     @user = params[:user]
-    mail(to: @user.email, subject: 'Change Eth Address Confirmation')
+
+    mail(to: @user.email, subject: 'Change eth address confirmation')
   end
 end

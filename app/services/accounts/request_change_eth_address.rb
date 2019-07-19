@@ -84,10 +84,11 @@ module Accounts
     end
 
     def send_confirmation(user)
-      UserMailer.with(user: @user).change_eth_address_confirmation.deliver_now
+      UserMailer.with(user: user).change_eth_address_confirmation.deliver_now
 
       M.Success(user)
-    rescue StandardError
+    rescue StandardError => e
+      puts e.inspect
       M.Failure(type: :email_not_sent)
     end
 
