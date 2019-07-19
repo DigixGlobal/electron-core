@@ -607,7 +607,7 @@ type KycTier2 {
   """
   An integer indicating the current step of the wizard of process.
   """
-  formStep: PositiveInteger!
+  formStep: PositiveInteger
 
   """
   Type ID

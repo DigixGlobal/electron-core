@@ -12,7 +12,7 @@ module Types
             null: false,
             description: 'Current status of the KYC request'
       field :form_step, Types::Scalar::PositiveInteger,
-            null: false,
+            null: true,
             description: <<~EOS
               An integer indicating the current step of the wizard of process.
             EOS
