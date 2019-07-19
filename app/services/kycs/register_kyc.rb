@@ -56,6 +56,7 @@ module Kycs
       attrs[:residence_country] = attrs.delete(:country_of_residence)
 
       kyc = Kyc.new(attrs)
+      kyc.applying_status = nil
       kyc.user_id = user_id
       kyc.tier = :tier_1
 

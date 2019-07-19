@@ -27,6 +27,7 @@ RSpec.describe KycService, type: :service do
                   country: eq(params[:country_of_residence])
                 )
               ))
+        expect(Kyc.find_by(user_id: user.id).applying_status).to(be_nil)
       end
 
       it 'should fail with the same params' do
