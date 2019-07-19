@@ -15,10 +15,6 @@ RSpec.describe 'currentUser query', type: :schema do
             id
             email
             ethAddress
-            ethAddressChange {
-              ethAddress
-              status
-            }
             tncVersion
           }
         }
@@ -40,8 +36,7 @@ RSpec.describe 'currentUser query', type: :schema do
     let(:user) do
       create(
         :user,
-        new_eth_address: generate(:eth_address),
-        change_eth_address_status: :pending
+        new_eth_address: generate(:eth_address)
       )
     end
     let(:query) do
@@ -50,7 +45,6 @@ RSpec.describe 'currentUser query', type: :schema do
           currentUser {
             ethAddressChange {
               ethAddress
-              status
             }
           }
         }
@@ -65,7 +59,7 @@ RSpec.describe 'currentUser query', type: :schema do
     end
 
     specify 'should work without any change' do
-      user.update_attributes(new_eth_address: nil, change_eth_address_status: nil)
+      user.update_attributes(new_eth_address: nil)
 
       result = execute(query, {}, context)
 
@@ -83,7 +77,8 @@ RSpec.describe 'currentUser query', type: :schema do
             id
             kyc {
               id
-              applyingKyc {
+            }
+            applyingKyc {
                 ... on KycTier2 {
                   id
                   formStep
@@ -124,7 +119,6 @@ RSpec.describe 'currentUser query', type: :schema do
                   updatedAt
                 }
               }
-            }
           }
         }
       GQL
@@ -134,7 +128,7 @@ RSpec.describe 'currentUser query', type: :schema do
       result = execute(query, {}, context)
 
       expect(result).to(have_no_graphql_errors)
-      expect(result['data']['currentUser']['kyc']['applyingKyc'])
+      expect(result['data']['currentUser']['applyingKyc'])
         .to(include(
               'status' => 'DRAFTED'
             ))

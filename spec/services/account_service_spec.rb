@@ -402,16 +402,12 @@ RSpec.describe AccountService, type: :service do
     end
   end
 
-  describe '.change_eth_address' do
+  describe '.request_change_eth_address' do
     let(:user) { create(:user) }
     let(:eth_address) { generate(:eth_address) }
-    let!(:web_stub) do
-      stub_request(:post, "#{KycApi::SERVER_URL}/addressChange")
-        .to_return(body: {}.to_json)
-    end
 
     context 'with valid eth address' do
-      let!(:result) { AccountService.change_eth_address(user.id, eth_address) }
+      let!(:result) { AccountService.request_change_eth_address(user.id, eth_address) }
 
       specify 'should work' do
         expect(result).to(be_success)
@@ -421,59 +417,63 @@ RSpec.describe AccountService, type: :service do
         expect(value).to(be_instance_of(AccountTypes::EthAddressChangeEntity))
         expect(value)
           .to(include(
-                eth_address: eq(eth_address),
-                status: eq(:pending.to_s)
+                eth_address: eq(eth_address)
               ))
       end
 
-      it 'should update KYC server' do
-        expect(web_stub).to(have_been_requested)
+      describe 'confirmation email' do
+        let(:confirmation_email) { ActionMailer::Base.deliveries.last }
+
+        specify 'should be sent' do
+          expect(confirmation_email).to(be_truthy)
+        end
+
+        it 'should be correct' do
+          token = user.reload.change_eth_address_token
+          expect(confirmation_email).to(deliver_to(user.email))
+          expect(confirmation_email).to(have_subject('Change eth address confirmation'))
+          expect(confirmation_email).to(have_body_text(/#{token}/))
+        end
       end
 
       it 'should fail with the same eth address' do
-        expect(AccountService.change_eth_address(user.id, eth_address))
-          .to(has_failure_type(:invalid_data))
+        expect(AccountService.request_change_eth_address(user.id, eth_address))
+          .to(has_invalid_data_error_field(:eth_address))
+      end
+
+      it 'should invalidate old token with a different eth address request' do
+        token = user.reload.change_eth_address_token
+
+        expect(AccountService.request_change_eth_address(user.id, generate(:eth_address)))
+          .to(be_success)
+        expect(User.find_by(change_eth_address_token: token)).to(be_nil)
       end
     end
 
     context 'can fail' do
       example 'when user is missing' do
-        expect(AccountService.change_eth_address(SecureRandom.uuid, eth_address))
+        expect(AccountService.request_change_eth_address(SecureRandom.uuid, eth_address))
           .to(has_failure_type(:user_not_found))
       end
 
       example 'when user is invalid' do
         invalid_user = create(:kyc_officer_user)
 
-        expect(AccountService.change_eth_address(invalid_user.id, eth_address))
+        expect(AccountService.request_change_eth_address(invalid_user.id, eth_address))
           .to(has_failure_type(:unauthorized_action))
-      end
-
-      example 'with empty data' do
-        result = AccountService.reset_password({})
-
-        expect(result).to(has_failure_type(:invalid_data))
-      end
-
-      example 'when KYC api is down' do
-        stub_request(:post, "#{KycApi::SERVER_URL}/addressChange")
-          .to_raise(StandardError)
-
-        expect(AccountService.change_eth_address(user.id, eth_address))
-          .to(has_failure_type(:request_failed))
       end
 
       context 'on eth address' do
         let(:key) { :eth_address }
 
         example 'when empty' do
-          expect(AccountService.change_eth_address(user.id, nil))
+          expect(AccountService.request_change_eth_address(user.id, nil))
             .to(has_invalid_data_error_field(key))
         end
 
         example 'when invalid' do
           property_of { SecureRandom.hex }.check(10) do |invalid_address|
-            expect(AccountService.change_eth_address(user.id, invalid_address))
+            expect(AccountService.request_change_eth_address(user.id, invalid_address))
               .to(has_invalid_data_error_field(key))
           end
         end
@@ -481,16 +481,69 @@ RSpec.describe AccountService, type: :service do
         example 'when existing address' do
           used_address = create_list(:user, 3).sample.eth_address
 
-          expect(AccountService.change_eth_address(user.id, used_address))
+          expect(AccountService.request_change_eth_address(user.id, used_address))
             .to(has_invalid_data_error_field(key))
         end
 
         example 'when existing change address' do
           used_address = create(:user, new_eth_address: eth_address).new_eth_address
 
-          expect(AccountService.change_eth_address(user.id, used_address))
+          expect(AccountService.request_change_eth_address(user.id, used_address))
             .to(has_invalid_data_error_field(key))
         end
+      end
+    end
+  end
+
+  describe '.change_eth_address' do
+    let(:user) { create(:user) }
+    let(:token) do
+      AccountService.request_change_eth_address(user.id, generate(:eth_address))
+
+      user.reload.change_eth_address_token
+    end
+    let!(:web_stub) do
+      stub_request(:post, "#{KycApi::SERVER_URL}/addressChange")
+        .to_return(body: {}.to_json)
+    end
+
+    context 'with valid token' do
+      let!(:result) { AccountService.change_eth_address(token) }
+
+      specify 'should work' do
+        expect(result).to(be_success)
+
+        value = result.value!
+
+        expect(value).to(be_instance_of(AccountTypes::UserEntity))
+        expect(value)
+          .to(include(
+                eth_address: eq(user.new_eth_address)
+              ))
+      end
+
+      it 'should update KYC server' do
+        expect(web_stub).to(have_been_requested)
+      end
+
+      it 'should fail with the same token' do
+        expect(AccountService.change_eth_address(token))
+          .to(has_failure_type(:token_not_found))
+      end
+    end
+
+    context 'can fail' do
+      example 'when token is missing' do
+        expect(AccountService.change_eth_address(nil))
+          .to(has_failure_type(:token_not_found))
+      end
+
+      example 'when KYC api is down' do
+        stub_request(:post, "#{KycApi::SERVER_URL}/addressChange")
+          .to_raise(StandardError)
+
+        expect(AccountService.change_eth_address(token))
+          .to(has_failure_type(:request_failed))
       end
     end
   end

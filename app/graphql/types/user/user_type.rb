@@ -23,9 +23,28 @@ module Types
       field :kyc, Types::Kyc::KycType,
             null: false,
             description: 'User KYC information'
+      field :applying_kyc, Types::Kyc::KycApplyingType,
+            null: true,
+            description: <<~EOS
+              If the user has drafted a KYC, this will be that KYC.
+               Otherwise, this is just `null`
+            EOS
 
       def kyc
         KycService.find_by_user(object.id)
+      end
+
+      def applying_kyc
+        kyc = KycService.find_by_user(object.id).to_model
+
+        return nil unless kyc.applying_status
+
+        case kyc.tier
+        when 'tier_1' then
+          KycTypes::Tier2KycEntity.from_model(kyc)
+        when 'tier_2' then
+          nil
+        end
       end
 
       def eth_address_change

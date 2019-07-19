@@ -2,17 +2,16 @@
 
 require 'rails_helper'
 
-RSpec.describe 'changeEthAddress mutation', type: :schema do
+RSpec.describe 'requestChangeEthAddress mutation', type: :schema do
   let(:user) { create(:user) }
   let(:context) { { current_user: user } }
   let(:query) do
     <<~GQL
-      mutation changeEthAddress($ethAddress: String!) {
-        changeEthAddress(input: {ethAddress: $ethAddress}) {
+      mutation ($ethAddress: String!) {
+        requestChangeEthAddress(input: {ethAddress: $ethAddress}) {
           clientMutationId
           ethAddressChange {
             ethAddress
-            status
           }
           errors {
             field
@@ -23,13 +22,8 @@ RSpec.describe 'changeEthAddress mutation', type: :schema do
     GQL
   end
 
-  let(:key) { 'changeEthAddress' }
+  let(:key) { 'requestChangeEthAddress' }
   let(:eth_address) { generate(:eth_address) }
-
-  before do
-    stub_request(:post, "#{KycApi::SERVER_URL}/addressChange")
-      .to_return(body: {}.to_json)
-  end
 
   specify 'should work with valid data' do
     result = execute(query, { 'ethAddress' => eth_address }, context)

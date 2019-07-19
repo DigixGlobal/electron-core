@@ -18,12 +18,6 @@ module Types
                After this date, the KYC is marked `EXPIRED`
                and the user should submit again.
             EOS
-      field :applying_kyc, Types::Kyc::KycApplyingType,
-            null: true,
-            description: <<~EOS
-              If the user has drafted a KYC, this will be that KYC.
-               Otherwise, this is just `null`
-            EOS
       field :first_name, String,
             null: true,
             description: 'First name of the user'
@@ -63,19 +57,6 @@ module Types
       field :updated_at, GraphQL::Types::ISO8601DateTime,
             null: false,
             description: 'Date when the KYC was last updated'
-
-      def applying_kyc
-        kyc = object.to_model
-
-        return nil unless kyc.applying_status
-
-        case kyc.tier
-        when 'tier_1' then
-          KycTypes::Tier2KycEntity.from_model(kyc)
-        when 'tier_2' then
-          nil
-        end
-      end
     end
   end
 end

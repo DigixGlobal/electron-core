@@ -126,8 +126,10 @@ ActiveRecord::Schema.define(version: 2019_05_14_020310) do
     t.timestamp "discarded_at"
     t.string "tnc_version", limit: 50, null: false
     t.string "eth_address", limit: 42
-    t.integer "change_eth_address_status"
     t.string "new_eth_address", limit: 42
+    t.string "change_eth_address_token"
+    t.datetime "change_eth_address_sent_at"
+    t.index ["change_eth_address_token"], name: "index_users_on_change_eth_address_token", unique: true
     t.index ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true
     t.index ["discarded_at"], name: "index_users_on_discarded_at"
     t.index ["email"], name: "index_users_on_email", unique: true

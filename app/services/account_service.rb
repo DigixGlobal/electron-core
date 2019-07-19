@@ -39,7 +39,11 @@ module AccountService
     Accounts::ResetPassword.new.call(attrs)
   end
 
-  def self.change_eth_address(id, new_address)
-    Accounts::ChangeEthAddress.new.call(id: id, eth_address: new_address)
+  def self.request_change_eth_address(id, new_address)
+    Accounts::RequestChangeEthAddress.new.call(id: id, eth_address: new_address)
+  end
+
+  def self.change_eth_address(token)
+    Accounts::ChangeEthAddress.new.call(token)
   end
 end

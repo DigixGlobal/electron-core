@@ -3,7 +3,7 @@
 class AddTierTwoFieldsToKycs < ActiveRecord::Migration[5.2]
   def change
     change_table :kycs do |t|
-      t.integer :applying_status, null: true, default: 0
+      t.integer :applying_status, null: true
       t.string :rejection_reason, limit: 150, null: true
       t.string :approval_txhash, limit: 80, null: true
       t.integer :form_step, null: true, default: 0

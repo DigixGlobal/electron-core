@@ -13,4 +13,7 @@ bin/rails db:migrate
 
 rm -f tmp/pids/server.pid
 
+echo "Clearing cache..."
+spring stop
+
 exec "$@"

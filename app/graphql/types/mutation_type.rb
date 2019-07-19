@@ -11,7 +11,7 @@ module Types
     field :approve_applying_kyc, mutation: Mutations::ApproveApplyingKycMutation
     field :reject_applying_kyc, mutation: Mutations::RejectApplyingKycMutation
 
-    field :change_eth_address, mutation: Mutations::ChangeEthAddressMutation
+    field :request_change_eth_address, mutation: Mutations::RequestChangeEthAddressMutation
 
     field :sign_pricefeed, mutation: Mutations::SignPricefeedMutation
   end
