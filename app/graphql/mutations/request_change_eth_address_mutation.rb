@@ -3,11 +3,10 @@
 require 'cancancan'
 
 module Mutations
-  class ChangeEthAddressMutation < Types::Base::BaseMutation
+  class RequestChangeEthAddressMutation < Types::Base::BaseMutation
     description <<~EOS
-      As the current user, change your eth address.
-       Since this involves a block chain transaction,
-       it will be eventually updated.
+      As the current user, request to change your eth address.
+       This requires email confirmation to fully change the address.
     EOS
 
     argument :eth_address, String,
@@ -32,12 +31,13 @@ module Mutations
     def resolve(eth_address:)
       user = context.fetch(:current_user)
 
-      result = AccountService.change_eth_address(user.id, eth_address)
+      result = AccountService.request_change_eth_address(user.id, eth_address)
 
       AppMatcher.result_matcher.call(result) do |m|
         m.success { |kyc| model_result(KEY, kyc) }
         m.failure(:invalid_data) { |errors| model_errors(KEY, errors) }
-        m.failure(:change_pending) { |_| form_error(KEY, 'Change still pending') }
+        m.failure(:email_not_sent) { |_| form_error(KEY, 'Email not sent') }
+        m.failure { |_| form_error(KEY, 'Error in changing address') }
       end
     end
 
