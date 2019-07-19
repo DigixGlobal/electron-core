@@ -8,9 +8,6 @@ module Types
       field :eth_address, String,
             null: false,
             description: 'New value of the Eth address'
-      field :status, Types::User::EthAddressChangeStatusEnum,
-            null: false,
-            description: 'Status of the change'
     end
   end
 end
