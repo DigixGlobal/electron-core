@@ -18,6 +18,10 @@ Rails.application.routes.draw do
 
   post '/api', to: 'graphql#execute'
 
+  get '/ethAddressChange',
+      to: 'account#change_eth_address',
+      as: 'account_change_eth_addresses'
+
   post '/tier2Approval',
        to: 'kyc_processor#approve_addresses',
        as: 'kyc_processor_approve_addresses'
