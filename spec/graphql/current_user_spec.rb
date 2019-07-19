@@ -77,7 +77,8 @@ RSpec.describe 'currentUser query', type: :schema do
             id
             kyc {
               id
-              applyingKyc {
+            }
+            applyingKyc {
                 ... on KycTier2 {
                   id
                   formStep
@@ -118,7 +119,6 @@ RSpec.describe 'currentUser query', type: :schema do
                   updatedAt
                 }
               }
-            }
           }
         }
       GQL
@@ -128,7 +128,7 @@ RSpec.describe 'currentUser query', type: :schema do
       result = execute(query, {}, context)
 
       expect(result).to(have_no_graphql_errors)
-      expect(result['data']['currentUser']['kyc']['applyingKyc'])
+      expect(result['data']['currentUser']['applyingKyc'])
         .to(include(
               'status' => 'DRAFTED'
             ))

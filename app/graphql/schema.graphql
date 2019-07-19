@@ -308,12 +308,6 @@ An user's KYC information.
 """
 type Kyc {
   """
-  If the user has drafted a KYC, this will be that KYC.
-   Otherwise, this is just `null`
-  """
-  applyingKyc: KycApplying
-
-  """
   Birthdate of the user
   """
   birthdate: Date
@@ -1190,6 +1184,12 @@ type Tnc {
 DAO users who publish proposals and vote for them
 """
 type User {
+  """
+  If the user has drafted a KYC, this will be that KYC.
+   Otherwise, this is just `null`
+  """
+  applyingKyc: KycApplying
+
   """
   User's email
   """
