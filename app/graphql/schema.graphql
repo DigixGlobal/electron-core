@@ -225,11 +225,6 @@ input DraftTier2KycMutationInput {
   residenceProofImage: DataUrl
 
   """
-  Kind/type of proof presented for residence
-  """
-  residenceProofType: KycResidenceProofTypeEnum
-
-  """
   A flag to indicate to submit the draft after updating it.
    Usually, true when it is the final operation in a wizard.
 
@@ -398,6 +393,16 @@ Identification proof for KYC
 """
 type KycIdentificationProof {
   """
+  An additional image of the ID usually the back.
+   This is used for the backside of the passport.
+
+  It is possible for this to be `null` after submitting
+   since file storage is asynchronous, so be careful with the mutation.
+   However, it should be a valid object in practice.
+  """
+  backImage: KycImage
+
+  """
   Expiration date of the ID
   """
   expirationDate: Date!
@@ -430,11 +435,6 @@ enum KycIdentificationProofTypeEnum {
   National Identity Card (Drivers License not accepted)
   """
   IDENTITY_CARD
-
-  """
-  National ID Card(Singapore Residents only)
-  """
-  NATIONAL_ID
 
   """
   International passport
@@ -478,26 +478,6 @@ type KycResidenceProof {
    However, it should be a valid object in practice.
   """
   image: KycImage
-
-  """
-  Kind of image presented as proof
-  """
-  type: KycResidenceProofTypeEnum!
-}
-
-"""
-Type of residence proof for KYC
-"""
-enum KycResidenceProofTypeEnum {
-  """
-  Bank statement
-  """
-  BANK_STATEMENT
-
-  """
-  Utility bill such as electricity or water
-  """
-  UTILITY_BILL
 }
 
 """
@@ -598,11 +578,6 @@ type KycTier2 {
   Image of residence proof
   """
   residenceProofImage: KycImage
-
-  """
-  Type of residence proof
-  """
-  residenceProofType: KycResidenceProofTypeEnum
 
   """
   Current status of the KYC request

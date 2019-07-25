@@ -299,7 +299,6 @@ RSpec.describe KycService, type: :service do
         expect(value)
           .to(include(
                 status: eq(:drafted.to_s),
-                residence_proof_type: eq(params[:residence_proof_type]),
                 residence_postal_code: eq(params[:residence_postal_code]),
                 residence_line_1: eq(params[:residence_line_1]),
                 residence_line_2: eq(params[:residence_line_2]),
@@ -363,35 +362,6 @@ RSpec.describe KycService, type: :service do
       example 'with invalid user' do
         expect(KycService.draft_tier2_kyc(SecureRandom.uuid, params))
           .to(be_failure)
-      end
-
-      context 'on residence proof type' do
-        let(:key) { :residence_proof_type }
-
-        example 'when empty' do
-          invalid_params = params.merge(key => nil)
-
-          expect(KycService.draft_tier2_kyc(user.id, invalid_params))
-            .to(has_invalid_data_error_field(key))
-        end
-
-        example 'when invalid' do
-          invalid_params = params.merge(key => SecureRandom.hex)
-
-          expect(KycService.draft_tier2_kyc(user.id, invalid_params))
-            .to(has_invalid_data_error_field(key))
-        end
-      end
-
-      context 'on residence proof type' do
-        let(:key) { :residence_proof_type }
-
-        example 'when empty' do
-          invalid_params = params.merge(key => nil)
-
-          expect(KycService.draft_tier2_kyc(user.id, invalid_params))
-            .to(has_invalid_data_error_field(key))
-        end
       end
 
       context 'on residence proof image' do
@@ -604,7 +574,6 @@ RSpec.describe KycService, type: :service do
 
         %i[
           form_step
-          residence_proof_type
           residence_city
           residence_postal_code
           residence_line_1

@@ -113,7 +113,6 @@ RSpec.describe 'currentUser query', type: :schema do
                       contentType
                     }
                   }
-                  residenceProofType
                   status
                   createdAt
                   updatedAt

@@ -89,9 +89,6 @@ module Mutations
                - Must be comprised of alphanumeric characters (`A-Z0-9`), spaces and dashes (`-`)
                - Must not end or begin with a dash
              EOS
-    argument :residence_proof_type, Types::Kyc::KycResidenceProofTypeEnum,
-             required: false,
-             description: 'Kind/type of proof presented for residence'
     argument :residence_proof_image, Types::Scalar::DataUrl,
              required: false,
              description: <<~EOS

@@ -79,7 +79,7 @@ ActiveRecord::Schema.define(version: 2019_05_14_020310) do
     t.string "residence_country", limit: 150
     t.string "citizenship", limit: 150
     t.date "birthdate"
-    t.integer "applying_status", default: 0
+    t.integer "applying_status"
     t.string "rejection_reason", limit: 150
     t.string "approval_txhash", limit: 80
     t.integer "form_step", default: 0
@@ -87,12 +87,12 @@ ActiveRecord::Schema.define(version: 2019_05_14_020310) do
     t.string "residence_line_2", limit: 1000
     t.string "residence_city", limit: 250
     t.string "residence_postal_code", limit: 25
-    t.integer "residence_proof_type"
     t.integer "identification_proof_type"
     t.date "identification_proof_expiration_date"
     t.string "identification_proof_number", limit: 50
     t.text "residence_proof_image_data"
     t.text "identification_proof_image_data"
+    t.text "identification_proof_back_image_data"
     t.text "identification_pose_image_data"
     t.index ["applying_status"], name: "index_kycs_on_applying_status"
     t.index ["discarded_at"], name: "index_kycs_on_discarded_at"

@@ -15,7 +15,6 @@ FactoryBot.define do
 
     factory :kyc_tier_2 do
       form_step { generate(:positive_integer) }
-      residence_proof_type { generate(:kyc_residence_proof_type) }
       residence_city { generate(:city) }
       residence_postal_code { generate(:postal_code) }
       residence_line_1 { generate(:street_address) }

@@ -7,8 +7,6 @@ module Types
 
       value 'PASSPORT', 'International passport',
             value: 'passport'
-      value 'NATIONAL_ID', 'National ID Card(Singapore Residents only)',
-            value: 'national_id'
       value 'IDENTITY_CARD', 'National Identity Card (Drivers License not accepted)',
             value: 'identity_card'
     end

@@ -41,9 +41,6 @@ module Types
       field :residence_postal_code, String,
             null: true,
             description: 'Postal code of residence'
-      field :residence_proof_type, Types::Kyc::KycResidenceProofTypeEnum,
-            null: true,
-            description: 'Type of residence proof'
       field :residence_proof_image, Types::Kyc::KycImageType,
             null: true,
             description: 'Image of residence proof'

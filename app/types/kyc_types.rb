@@ -57,8 +57,7 @@ module KycTypes
           line_2: model.residence_line_2
         },
         residence_proof: {
-          image: model.residence_proof_image,
-          type: model.residence_proof_type
+          image: model.residence_proof_image
         },
         identification_proof: {
           number: model.identification_proof_number,
@@ -89,7 +88,6 @@ module KycTypes
     attribute(:expiration_date, Types::Date)
     attribute(:rejection_reason, Types::String)
 
-    attribute(:residence_proof_type, Types::String)
     attribute(:residence_proof_image, Types::Hash)
     attribute(:residence_city, Types::String)
     attribute(:residence_postal_code, Types::String)
@@ -115,7 +113,6 @@ module KycTypes
         expiration_date: model.expiration_date,
         rejection_reason: model.rejection_reason,
 
-        residence_proof_type: model.residence_proof_type,
         residence_proof_image: model.residence_proof_image,
         residence_city: model.residence_city,
         residence_postal_code: model.residence_postal_code,

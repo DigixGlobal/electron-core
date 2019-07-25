@@ -5,9 +5,6 @@ module Types
     class KycResidenceProofType < Types::Base::BaseObject
       description 'Residence proof for KYC'
 
-      field :type, Types::Kyc::KycResidenceProofTypeEnum,
-            null: false,
-            description: 'Kind of image presented as proof'
       field :image, Types::Kyc::KycImageType,
             null: true,
             description: <<~EOS

@@ -17,7 +17,6 @@ module Kycs
     def schema
       Dry::Validation.Schema(AppSchema) do
         required(:form_step).filled
-        required(:residence_proof_type).filled
         required(:residence_city).filled
         required(:residence_postal_code).filled
         required(:residence_line_1).filled

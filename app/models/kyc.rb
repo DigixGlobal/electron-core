@@ -20,10 +20,6 @@ class Kyc < ApplicationRecord
     national_id: 1,
     identity_card: 2
   }, _prefix: :identification
-  enum residence_proof_type: {
-    utility_bill: 0,
-    bank_statement: 1
-  }, _prefix: :residence
 
   belongs_to :user,
              foreign_type: :string

@@ -10,7 +10,6 @@ RSpec.describe 'draftTier2Kyc mutation', type: :schema do
       mutation(
         $formStep: PositiveInteger!
         $submit: Boolean
-        $residenceProofType: KycResidenceProofTypeEnum
         $residenceProofImage: DataUrl
         $residenceCity: String
         $residencePostalCode: String
@@ -26,7 +25,6 @@ RSpec.describe 'draftTier2Kyc mutation', type: :schema do
           input: {
             formStep: $formStep
             submit: $submit
-            residenceProofType: $residenceProofType
             residenceProofImage: $residenceProofImage
             residenceCity: $residenceCity
             residencePostalCode: $residencePostalCode
@@ -90,7 +88,6 @@ RSpec.describe 'draftTier2Kyc mutation', type: :schema do
                 uri
               }
             }
-            residenceProofType
             status
             updatedAt
           }

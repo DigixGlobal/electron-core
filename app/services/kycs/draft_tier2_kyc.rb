@@ -19,8 +19,6 @@ module Kycs
       Dry::Validation.Schema(AppSchema) do
         required(:form_step)
           .filled(:int?, gteq?: 0)
-        optional(:residence_proof_type)
-          .filled(included_in?: Kyc.residence_proof_types.keys)
         optional(:residence_city)
           .filled(max_size?: 250)
         optional(:residence_postal_code)

@@ -5,7 +5,6 @@ require 'faker'
 FactoryBot.define do
   factory :draft_tier2_kyc, class: 'Hash' do
     form_step { generate(:positive_integer) }
-    residence_proof_type { generate(:kyc_residence_proof_type) }
     residence_city { generate(:city) }
     residence_postal_code { generate(:postal_code) }
     residence_line_1 { generate(:street_address) }
@@ -20,7 +19,6 @@ FactoryBot.define do
     identification_pose_image { generate(:data_url) }
 
     factory :draft_tier2_kyc_params do
-      residence_proof_type { generate(:kyc_residence_proof_type).upcase }
       identification_proof_type { generate(:kyc_identification_proof_type).upcase }
       residence_proof_image { generate(:data_url).to_s }
       identification_proof_image { generate(:data_url).to_s }
