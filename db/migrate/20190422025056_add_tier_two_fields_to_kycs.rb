@@ -18,6 +18,7 @@ class AddTierTwoFieldsToKycs < ActiveRecord::Migration[5.2]
 
       t.text :residence_proof_image_data
       t.text :identification_proof_image_data
+      t.text :identification_proof_back_image_data
       t.text :identification_pose_image_data
     end
 

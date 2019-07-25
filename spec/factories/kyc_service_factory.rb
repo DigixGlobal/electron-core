@@ -17,12 +17,19 @@ FactoryBot.define do
     identification_proof_number { |_| SecureRandom.hex }
     identification_proof_expiration_date { generate(:future_date) }
     identification_pose_image { generate(:data_url) }
+    identification_proof_back_image do
+      identification_proof_type == :identity_card.to_s ? generate(:data_url) : nil
+    end
 
     factory :draft_tier2_kyc_params do
       identification_proof_type { generate(:kyc_identification_proof_type).upcase }
       residence_proof_image { generate(:data_url).to_s }
       identification_proof_image { generate(:data_url).to_s }
       identification_pose_image { generate(:data_url).to_s }
+      identification_proof_back_image do
+        identification_proof_type == :identity_card.to_s.upcase ? generate(:data_url) : nil
+      end
+
       identification_proof_expiration_date { generate(:future_date).strftime('%F') }
     end
   end

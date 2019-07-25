@@ -25,6 +25,9 @@ FactoryBot.define do
 
       residence_proof_image { generate(:image) }
       identification_proof_image { generate(:image) }
+      identification_proof_back_image do
+        identification_proof_type == :identity_card.to_s ? generate(:image) : nil
+      end
       identification_pose_image { generate(:image) }
 
       factory :drafted_kyc_tier_2 do

@@ -29,6 +29,7 @@ module KycTypes
       attribute(:number, Types::String.optional)
       attribute(:expiration_date, Types::Date.optional)
       attribute(:image, Types::Hash.optional)
+      attribute(:back_image, Types::Hash.optional)
     end
 
     attribute :identification_pose do
@@ -63,6 +64,7 @@ module KycTypes
           number: model.identification_proof_number,
           type: model.identification_proof_type,
           image: model.identification_proof_image,
+          back_image: model.identification_proof_back_image,
           expiration_date: model.identification_proof_expiration_date
         },
         identification_pose: {
@@ -96,6 +98,7 @@ module KycTypes
     attribute(:identification_proof_number, Types::String)
     attribute(:identification_proof_type, Types::String)
     attribute(:identification_proof_image, Types::Hash)
+    attribute(:identification_proof_back_image, Types::Hash)
     attribute(:identification_proof_expiration_date, Types::Date)
     attribute(:identification_pose_image, Types::Hash)
 
@@ -121,6 +124,7 @@ module KycTypes
         identification_proof_number: model.identification_proof_number,
         identification_proof_type: model.identification_proof_type,
         identification_proof_image: model.identification_proof_image,
+        identification_proof_back_image: model.identification_proof_back_image,
         identification_proof_expiration_date: model.identification_proof_expiration_date,
         identification_pose_image: model.identification_pose_image,
 

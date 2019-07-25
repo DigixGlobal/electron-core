@@ -55,6 +55,15 @@ module Mutations
                - Maximum of 10 MB size
                - JPEG, PNG or PDF files only
              EOS
+    argument :identification_proof_back_image, Types::Scalar::DataUrl,
+             required: false,
+             description: <<~EOS
+               Image data URL to the back side of the main ID identification.
+
+               Validations:
+               - Maximum of 10 MB size
+               - JPEG, PNG or PDF files only
+             EOS
     argument :residence_line_1, String,
              required: false,
              description: <<~EOS

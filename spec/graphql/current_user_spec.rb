@@ -99,6 +99,14 @@ RSpec.describe 'currentUser query', type: :schema do
                       contentType
                     }
                   }
+                  identificationProofBackImage {
+                    original {
+                      contentType
+                    }
+                    thumbnail {
+                      contentType
+                    }
+                  }
                   identificationProofNumber
                   identificationProofType
                   residenceCity

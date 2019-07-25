@@ -152,6 +152,15 @@ input DraftTier2KycMutationInput {
   identificationPoseImage: DataUrl
 
   """
+  Image data URL to the back side of the main ID identification.
+
+  Validations:
+  - Maximum of 10 MB size
+  - JPEG, PNG or PDF files only
+  """
+  identificationProofBackImage: DataUrl
+
+  """
   Expiration date of the ID.
 
   Validations:
@@ -533,6 +542,11 @@ type KycTier2 {
   Image of identification pose
   """
   identificationPoseImage: KycImage
+
+  """
+  Additional image of the identification proof which is usually the back side
+  """
+  identificationProofBackImage: KycImage
 
   """
   Expiration date of the identification proof

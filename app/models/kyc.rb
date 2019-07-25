@@ -11,14 +11,14 @@ class Kyc < ApplicationRecord
 
   include PictureUploader::Attachment.new(:residence_proof_image)
   include PictureUploader::Attachment.new(:identification_proof_image)
+  include PictureUploader::Attachment.new(:identification_proof_back_image)
   include PictureUploader::Attachment.new(:identification_pose_image)
 
   enum applying_status: { drafted: 0, pending: 1, approving: 2, approved: 3, rejected: 4 }
   enum tier: { tier_1: 1, tier_2: 2 }
   enum identification_proof_type: {
     passport: 0,
-    national_id: 1,
-    identity_card: 2
+    identity_card: 1
   }, _prefix: :identification
 
   belongs_to :user,

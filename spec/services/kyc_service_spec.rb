@@ -285,7 +285,13 @@ RSpec.describe KycService, type: :service do
 
   describe '.draft_tier2_kyc' do
     let(:user) { create(:user_with_kyc) }
-    let(:params) { attributes_for(:draft_tier2_kyc) }
+    let(:params) do
+      params = attributes_for(:draft_tier2_kyc)
+
+      params.delete(:identification_proof_back_image) unless params[:identification_proof_back_image]
+
+      params
+    end
 
     context 'with valid data' do
       let!(:result) { KycService.draft_tier2_kyc(user.id, params) }
@@ -316,6 +322,11 @@ RSpec.describe KycService, type: :service do
           .to(eq(params[:identification_proof_image].to_s))
         expect(value.identification_pose_image[:original].data_uri.to_s)
           .to(eq(params[:identification_pose_image].to_s))
+
+        if params[:identification_proof_type] == :identity_card.to_s
+          expect(value.identification_proof_back_image[:original].data_uri.to_s)
+            .to(eq(params[:identification_proof_back_image].to_s))
+        end
       end
 
       it 'should still work with the same params' do
@@ -325,6 +336,9 @@ RSpec.describe KycService, type: :service do
 
       it 'should update with the different params' do
         new_params = attributes_for(:draft_tier2_kyc)
+        unless new_params[:identification_proof_back_image]
+          new_params.delete(:identification_proof_back_image)
+        end
 
         result = KycService.draft_tier2_kyc(user.id, new_params)
 
@@ -511,6 +525,22 @@ RSpec.describe KycService, type: :service do
 
           expect(KycService.draft_tier2_kyc(user.id, invalid_params))
             .to(has_invalid_data_error_field(key))
+        end
+      end
+
+      context 'on identification pose image' do
+        let(:key) { :identification_proof_back_image }
+
+        example 'when empty when ID type identity card' do
+          invalid_params = params.merge(identification_proof_type: 'identity_card')
+          invalid_params.delete(:identification_proof_back_image)
+
+          expect(KycService.draft_tier2_kyc(user.id, invalid_params))
+            .to(has_invalid_data_error_field(key))
+
+          valid_params = params.merge(identification_proof_type: 'passport')
+
+          expect(KycService.draft_tier2_kyc(user.id, valid_params)).to(be_success)
         end
       end
 
