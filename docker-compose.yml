@@ -34,7 +34,7 @@ services:
       - CONFIRMATION_URI=https://localhost:5000/#/portal/register/confirmation
       - RESET_PASSWORD_URI=https://localhost:5000/#/portal/forgot-password/reset-form
       - CHANGE_ETH_ADDRESS_CONFIRMATION_URI=https://localhost:5000/#/portal/dashboard
-      - PRICEFEED_URL=http://neutron_pricefeed:4001/api
+      - PRICEFEED_URL=http://neutron_pricefeed:4001/graphql
       - BLOCKCHAIN_URL=$BLOCKCHAIN_URL
     volumes:
       - .:/app
