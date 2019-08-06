@@ -12,6 +12,7 @@ echo "Migrating database if any pending migrations..."
 bin/rails db:migrate
 
 rm -f tmp/pids/server.pid
+rm -rf tmp/cache/
 
 echo "Clearing cache..."
 spring stop
