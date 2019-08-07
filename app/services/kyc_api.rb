@@ -14,7 +14,7 @@ module KycApi
     request_kyc_server(
       'POST',
       '/addressChange',
-      "address": address.downcase,
+      "address": address&.downcase || '',
       "newAddress": new_address.downcase
     )
   end

@@ -496,7 +496,7 @@ RSpec.describe AccountService, type: :service do
   end
 
   describe '.change_eth_address' do
-    let(:user) { create(:user) }
+    let(:user) { create(:user, eth_address: nil) }
     let(:token) do
       AccountService.request_change_eth_address(user.id, generate(:eth_address))
 
