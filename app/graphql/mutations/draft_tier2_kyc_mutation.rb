@@ -55,6 +55,15 @@ module Mutations
                - Maximum of 10 MB size
                - JPEG, PNG or PDF files only
              EOS
+    argument :identification_proof_back_image, Types::Scalar::DataUrl,
+             required: false,
+             description: <<~EOS
+               Image data URL to the back side of the main ID identification.
+
+               Validations:
+               - Maximum of 10 MB size
+               - JPEG, PNG or PDF files only
+             EOS
     argument :residence_line_1, String,
              required: false,
              description: <<~EOS
@@ -89,9 +98,6 @@ module Mutations
                - Must be comprised of alphanumeric characters (`A-Z0-9`), spaces and dashes (`-`)
                - Must not end or begin with a dash
              EOS
-    argument :residence_proof_type, Types::Kyc::KycResidenceProofTypeEnum,
-             required: false,
-             description: 'Kind/type of proof presented for residence'
     argument :residence_proof_image, Types::Scalar::DataUrl,
              required: false,
              description: <<~EOS

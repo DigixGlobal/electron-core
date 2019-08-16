@@ -79,7 +79,7 @@ ActiveRecord::Schema.define(version: 2019_05_14_020310) do
     t.string "residence_country", limit: 150
     t.string "citizenship", limit: 150
     t.date "birthdate"
-    t.integer "applying_status", default: 0
+    t.integer "applying_status"
     t.string "rejection_reason", limit: 150
     t.string "approval_txhash", limit: 80
     t.integer "form_step", default: 0

@@ -152,6 +152,15 @@ input DraftTier2KycMutationInput {
   identificationPoseImage: DataUrl
 
   """
+  Image data URL to the back side of the main ID identification.
+
+  Validations:
+  - Maximum of 10 MB size
+  - JPEG, PNG or PDF files only
+  """
+  identificationProofBackImage: DataUrl
+
+  """
   Expiration date of the ID.
 
   Validations:
@@ -223,11 +232,6 @@ input DraftTier2KycMutationInput {
   - JPEG, PNG or PDF files only
   """
   residenceProofImage: DataUrl
-
-  """
-  Kind/type of proof presented for residence
-  """
-  residenceProofType: KycResidenceProofTypeEnum
 
   """
   A flag to indicate to submit the draft after updating it.
@@ -398,6 +402,16 @@ Identification proof for KYC
 """
 type KycIdentificationProof {
   """
+  An additional image of the ID usually the back.
+   This is used for the backside of the passport.
+
+  It is possible for this to be `null` after submitting
+   since file storage is asynchronous, so be careful with the mutation.
+   However, it should be a valid object in practice.
+  """
+  backImage: KycImage
+
+  """
   Expiration date of the ID
   """
   expirationDate: Date!
@@ -430,11 +444,6 @@ enum KycIdentificationProofTypeEnum {
   National Identity Card (Drivers License not accepted)
   """
   IDENTITY_CARD
-
-  """
-  National ID Card(Singapore Residents only)
-  """
-  NATIONAL_ID
 
   """
   International passport
@@ -478,26 +487,6 @@ type KycResidenceProof {
    However, it should be a valid object in practice.
   """
   image: KycImage
-
-  """
-  Kind of image presented as proof
-  """
-  type: KycResidenceProofTypeEnum!
-}
-
-"""
-Type of residence proof for KYC
-"""
-enum KycResidenceProofTypeEnum {
-  """
-  Bank statement
-  """
-  BANK_STATEMENT
-
-  """
-  Utility bill such as electricity or water
-  """
-  UTILITY_BILL
 }
 
 """
@@ -555,6 +544,11 @@ type KycTier2 {
   identificationPoseImage: KycImage
 
   """
+  Additional image of the identification proof which is usually the back side
+  """
+  identificationProofBackImage: KycImage
+
+  """
   Expiration date of the identification proof
   """
   identificationProofExpirationDate: Date
@@ -598,11 +592,6 @@ type KycTier2 {
   Image of residence proof
   """
   residenceProofImage: KycImage
-
-  """
-  Type of residence proof
-  """
-  residenceProofType: KycResidenceProofTypeEnum
 
   """
   Current status of the KYC request

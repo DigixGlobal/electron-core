@@ -15,7 +15,6 @@ FactoryBot.define do
 
     factory :kyc_tier_2 do
       form_step { generate(:positive_integer) }
-      residence_proof_type { generate(:kyc_residence_proof_type) }
       residence_city { generate(:city) }
       residence_postal_code { generate(:postal_code) }
       residence_line_1 { generate(:street_address) }
@@ -26,6 +25,9 @@ FactoryBot.define do
 
       residence_proof_image { generate(:image) }
       identification_proof_image { generate(:image) }
+      identification_proof_back_image do
+        identification_proof_type == :identity_card.to_s ? generate(:image) : nil
+      end
       identification_pose_image { generate(:image) }
 
       factory :drafted_kyc_tier_2 do

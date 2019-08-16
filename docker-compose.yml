@@ -39,6 +39,7 @@ services:
     volumes:
       - .:/app
       - bundler_gems:/usr/local/bundle/
+      - temp_data:/app/tmp
     ports:
       - '23000:3000'
     links:
@@ -57,3 +58,4 @@ networks:
 volumes:
   db:
   bundler_gems:
+  temp_data:

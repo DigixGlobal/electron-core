@@ -23,6 +23,16 @@ module Types
                since file storage is asynchronous, so be careful with the mutation.
                However, it should be a valid object in practice.
             EOS
-      end
+      field :back_image, Types::Kyc::KycImageType,
+            null: true,
+            description: <<~EOS
+              An additional image of the ID usually the back.
+               This is used for the backside of the passport.
+
+              It is possible for this to be `null` after submitting
+               since file storage is asynchronous, so be careful with the mutation.
+               However, it should be a valid object in practice.
+            EOS
+    end
   end
 end

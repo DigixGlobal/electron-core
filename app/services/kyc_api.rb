@@ -15,7 +15,7 @@ module KycApi
       'POST',
       '/addressChange',
       "address": address&.downcase || '',
-      "newAddress": new_address.downcase
+      "newAddress": new_address&.downcase
     )
   end
 

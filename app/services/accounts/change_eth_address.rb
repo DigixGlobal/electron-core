@@ -18,7 +18,7 @@ module Accounts
     private
 
     def find_by_token(token)
-      unless (user = User.find_by(change_eth_address_token: token))
+      unless token && (user = User.find_by(change_eth_address_token: token))
         return M.Failure(type: :token_not_found)
       end
 

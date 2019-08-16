@@ -29,6 +29,11 @@ module Types
       field :identification_proof_image, Types::Kyc::KycImageType,
             null: true,
             description: 'Image of the identification proof'
+      field :identification_proof_back_image, Types::Kyc::KycImageType,
+            null: true,
+            description: <<~EOS
+              Additional image of the identification proof which is usually the back side
+            EOS
       field :residence_line_1, String,
             null: true,
             description: 'Line 1 address of residence'
@@ -41,9 +46,6 @@ module Types
       field :residence_postal_code, String,
             null: true,
             description: 'Postal code of residence'
-      field :residence_proof_type, Types::Kyc::KycResidenceProofTypeEnum,
-            null: true,
-            description: 'Type of residence proof'
       field :residence_proof_image, Types::Kyc::KycImageType,
             null: true,
             description: 'Image of residence proof'

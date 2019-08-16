@@ -19,8 +19,6 @@ module Kycs
       Dry::Validation.Schema(AppSchema) do
         required(:form_step)
           .filled(:int?, gteq?: 0)
-        optional(:residence_proof_type)
-          .filled(included_in?: Kyc.residence_proof_types.keys)
         optional(:residence_city)
           .filled(max_size?: 250)
         optional(:residence_postal_code)
@@ -39,8 +37,17 @@ module Kycs
           .filled(:date?, :future_date?)
         optional(:identification_proof_image)
           .filled(type?: URI::Data)
+        optional(:identification_proof_back_image)
+          .filled(type?: URI::Data)
         optional(:identification_pose_image)
           .filled(type?: URI::Data)
+
+        rule(identification_proof_back_image: %i[
+               identification_proof_type
+               identification_proof_back_image
+             ]) do |type, back_image|
+          type.eql?(:identity_card.to_s).then(back_image.filled?)
+        end
       end
     end
 
@@ -76,6 +83,7 @@ module Kycs
         residence_proof_image
         identification_pose_image
         identification_proof_image
+        identification_proof_back_image
       ]
 
       attrs = AppSchema.preprocess_spaces(
@@ -91,6 +99,10 @@ module Kycs
 
       if (data_uri = params[:identification_proof_image])
         kyc.identification_proof_image_data_uri = encode_image(data_uri)
+      end
+
+      if (data_uri = params[:identification_proof_back_image])
+        kyc.identification_proof_back_image_data_uri = encode_image(data_uri)
       end
 
       if (data_uri = params[:identification_pose_image])

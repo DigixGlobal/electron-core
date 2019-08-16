@@ -29,6 +29,7 @@ module KycTypes
       attribute(:number, Types::String.optional)
       attribute(:expiration_date, Types::Date.optional)
       attribute(:image, Types::Hash.optional)
+      attribute(:back_image, Types::Hash.optional)
     end
 
     attribute :identification_pose do
@@ -57,13 +58,13 @@ module KycTypes
           line_2: model.residence_line_2
         },
         residence_proof: {
-          image: model.residence_proof_image,
-          type: model.residence_proof_type
+          image: model.residence_proof_image
         },
         identification_proof: {
           number: model.identification_proof_number,
           type: model.identification_proof_type,
           image: model.identification_proof_image,
+          back_image: model.identification_proof_back_image,
           expiration_date: model.identification_proof_expiration_date
         },
         identification_pose: {
@@ -89,7 +90,6 @@ module KycTypes
     attribute(:expiration_date, Types::Date)
     attribute(:rejection_reason, Types::String)
 
-    attribute(:residence_proof_type, Types::String)
     attribute(:residence_proof_image, Types::Hash)
     attribute(:residence_city, Types::String)
     attribute(:residence_postal_code, Types::String)
@@ -98,6 +98,7 @@ module KycTypes
     attribute(:identification_proof_number, Types::String)
     attribute(:identification_proof_type, Types::String)
     attribute(:identification_proof_image, Types::Hash)
+    attribute(:identification_proof_back_image, Types::Hash)
     attribute(:identification_proof_expiration_date, Types::Date)
     attribute(:identification_pose_image, Types::Hash)
 
@@ -115,7 +116,6 @@ module KycTypes
         expiration_date: model.expiration_date,
         rejection_reason: model.rejection_reason,
 
-        residence_proof_type: model.residence_proof_type,
         residence_proof_image: model.residence_proof_image,
         residence_city: model.residence_city,
         residence_postal_code: model.residence_postal_code,
@@ -124,6 +124,7 @@ module KycTypes
         identification_proof_number: model.identification_proof_number,
         identification_proof_type: model.identification_proof_type,
         identification_proof_image: model.identification_proof_image,
+        identification_proof_back_image: model.identification_proof_back_image,
         identification_proof_expiration_date: model.identification_proof_expiration_date,
         identification_pose_image: model.identification_pose_image,
 

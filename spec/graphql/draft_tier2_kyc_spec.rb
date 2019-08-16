@@ -10,7 +10,6 @@ RSpec.describe 'draftTier2Kyc mutation', type: :schema do
       mutation(
         $formStep: PositiveInteger!
         $submit: Boolean
-        $residenceProofType: KycResidenceProofTypeEnum
         $residenceProofImage: DataUrl
         $residenceCity: String
         $residencePostalCode: String
@@ -19,6 +18,7 @@ RSpec.describe 'draftTier2Kyc mutation', type: :schema do
         $identificationProofNumber: String
         $identificationProofType: KycIdentificationProofTypeEnum
         $identificationProofImage: DataUrl
+        $identificationProofBackImage: DataUrl
         $identificationProofExpirationDate: Date
         $identificationPoseImage: DataUrl
       ) {
@@ -26,7 +26,6 @@ RSpec.describe 'draftTier2Kyc mutation', type: :schema do
           input: {
             formStep: $formStep
             submit: $submit
-            residenceProofType: $residenceProofType
             residenceProofImage: $residenceProofImage
             residenceCity: $residenceCity
             residencePostalCode: $residencePostalCode
@@ -35,6 +34,7 @@ RSpec.describe 'draftTier2Kyc mutation', type: :schema do
             identificationProofNumber: $identificationProofNumber
             identificationProofType: $identificationProofType
             identificationProofImage: $identificationProofImage
+            identificationProofBackImage: $identificationProofBackImage
             identificationProofExpirationDate: $identificationProofExpirationDate
             identificationPoseImage: $identificationPoseImage
           }
@@ -72,6 +72,18 @@ RSpec.describe 'draftTier2Kyc mutation', type: :schema do
                 uri
               }
             }
+            identificationProofBackImage {
+              original {
+                contentType
+                dataUrl
+                uri
+              }
+              thumbnail {
+                contentType
+                dataUrl
+                uri
+              }
+            }
             identificationProofNumber
             identificationProofType
             residenceCity
@@ -90,7 +102,6 @@ RSpec.describe 'draftTier2Kyc mutation', type: :schema do
                 uri
               }
             }
-            residenceProofType
             status
             updatedAt
           }
@@ -98,13 +109,21 @@ RSpec.describe 'draftTier2Kyc mutation', type: :schema do
       }
     GQL
   end
+  let(:params) do
+    params = params_for(:draft_tier2_kyc_params, submit: submit)
+
+    params.delete('identificationProofBackImage') unless params['identificationProofBackImage']
+
+    params
+  end
 
   let(:key) { 'draftTier2Kyc' }
 
   context 'without submitting' do
     let(:submit) { false }
+
     specify 'should work with valid data' do
-      result = execute(query, params_for(:draft_tier2_kyc_params), context)
+      result = execute(query, params, context)
 
       expect(result).to(have_no_graphql_errors.and(have_no_graphql_mutation_errors(key)))
     end
@@ -116,8 +135,9 @@ RSpec.describe 'draftTier2Kyc mutation', type: :schema do
 
   context 'with submitting' do
     let(:submit) { true }
+
     specify 'should work with valid data' do
-      result = execute(query, params_for(:draft_tier2_kyc_params), context)
+      result = execute(query, params, context)
 
       expect(result).to(have_no_graphql_errors.and(have_no_graphql_mutation_errors(key)))
     end
