@@ -41,9 +41,11 @@ module Accounts
     end
 
     def broadcast(user:, eth_address:)
-      result = KycApi.change_eth_address(eth_address, user.eth_address)
+      if Rails.env.test? # TODO: Pending processor
+        result = KycApi.change_eth_address(eth_address, user.eth_address)
 
-      return result if result.failure?
+        return result if result.failure?
+      end
 
       M.Success(user)
     end
