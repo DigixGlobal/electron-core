@@ -1,8 +1,6 @@
 FROM ruby:2.6.2-alpine as builder
 
-RUN echo 'http://dl-cdn.alpinelinux.org/alpine/v3.8/main' >> /etc/apk/repositories
-
-RUN apk add --no-cache \
+RUN apk add --update --no-cache \
   build-base \
   busybox \
   ca-certificates \
@@ -12,7 +10,8 @@ RUN apk add --no-cache \
   graphicsmagick \
   libffi-dev \
   libsodium-dev \
-  libssl1.0 \
+  libssl1.1 \
+  musl-dev \
   openssh-client \
   mariadb-client \
   mariadb-dev \

@@ -19,7 +19,7 @@ services:
     ports:
       - '23080:80'
 
-  web:
+  app:
     build:
       context: .
       dockerfile: Dockerfile.dev
