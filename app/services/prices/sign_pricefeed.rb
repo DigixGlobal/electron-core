@@ -107,9 +107,9 @@ module Prices
 
       M.Success(
         payload: message,
-        signature: signature.rpc_signature.to_hex,
+        signature: signature.signature_hex,
         price: price,
-        signer: signature.signer
+        signer: signing_key.address
       )
     end
   end

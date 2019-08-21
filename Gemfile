@@ -18,6 +18,7 @@ group :development, :test do
   gem 'byebug', platforms: %i[mri mingw x64_mingw]
   gem 'graphiql-rails', '~> 1.7.0'
   gem 'mailcatcher', '~> 0.2.4'
+  gem 'pry', '~> 0.12.2'
 end
 
 group :development do
@@ -75,7 +76,7 @@ gem 'dry-validation', '~> 0.13.0'
 gem 'ed25519', '< 2.0.0'
 gem 'factory_bot', '~> 5.0.2'
 gem 'factory_bot_rails', '~> 5.0.1'
-gem 'faker', '>= 1.9.1', require: false
+gem 'faker', '~> 1.9.1', require: false
 gem 'faraday', '~> 0.15.4'
 gem 'faraday_json', '~> 0.1.4'
 gem 'fastimage', '~> 2.1.5'
@@ -85,9 +86,8 @@ gem 'maxmind-db', '~> 1.0.0'
 gem 'mime-types', '~> 3.2.2'
 gem 'mini_magick', '>= 4.9.4'
 gem 'mysql2', '~> 0.5.2'
+gem 'newrelic_rpm', '~> 6.5'
 gem 'rails_event_store', '~> 0.38.1'
 gem 'roda', '~> 3.20.0'
 gem 'rufus-scheduler', '~> 3.6'
 gem 'shrine', '~> 2.16.0'
-
-gem 'newrelic_rpm', '~> 6.5'
