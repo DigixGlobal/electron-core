@@ -16,9 +16,9 @@ module Types
             .to(be_instance_of(Integer))
         end
 
-        specify 'should work with zero' do
-          expect(scalar.coerce_input('0', context))
-            .to(eq(0))
+        specify 'should fail work with zero' do
+          expect { scalar.coerce_input('0', context) }
+            .to(raise_error(GraphQL::CoercionError))
         end
 
         it 'should fail with an invalid int' do

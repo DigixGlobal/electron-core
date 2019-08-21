@@ -25,5 +25,14 @@ module Types
     field :rejection_reasons,
           resolver: Resolvers::RejectionReasonsResolver,
           description: 'List of rejection reasons for KYC rejection'
+
+    field :search_kycs,
+          resolver: Resolvers::SearchKycsResolver,
+          connection: false,
+          description: <<~EOS
+            Search for KYCs, pending or all.
+
+            Role: KYC Officer
+          EOS
   end
 end

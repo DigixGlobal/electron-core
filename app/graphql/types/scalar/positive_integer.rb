@@ -4,11 +4,11 @@ module Types
   module Scalar
     class PositiveInteger < Types::Base::BaseScalar
       description <<~EOS
-        A integer that must be non-negative. Used for step values.
+        A integer that must be positive. Used for step values.
       EOS
 
       def self.coerce_input(input, _context)
-        unless (value = Integer(input)) && value >= 0
+        unless (value = Integer(input)) && value > 0
           raise ArgumentError
         end
 

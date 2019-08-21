@@ -30,6 +30,7 @@ module KycTypes
       attribute(:expiration_date, Types::Date.optional)
       attribute(:image, Types::Hash.optional)
       attribute(:back_image, Types::Hash.optional)
+      attribute(:type, Types::String.optional)
     end
 
     attribute :identification_pose do
