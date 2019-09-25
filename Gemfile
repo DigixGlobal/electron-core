@@ -6,6 +6,7 @@ git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 ruby '2.6.2'
 
 gem 'bootsnap', '>= 1.1.0', require: false
+gem 'pry', '~> 0.12.2'
 gem 'puma', '~> 3.11'
 gem 'rack', '~> 2.0.7'
 gem 'rack-attack', '~> 6.0.0'
@@ -18,7 +19,6 @@ group :development, :test do
   gem 'byebug', platforms: %i[mri mingw x64_mingw]
   gem 'graphiql-rails', '~> 1.7.0'
   gem 'mailcatcher', '~> 0.2.4'
-  gem 'pry', '~> 0.12.2'
 end
 
 group :development do
