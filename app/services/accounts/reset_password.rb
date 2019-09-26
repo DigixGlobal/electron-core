@@ -23,7 +23,7 @@ module Accounts
           end
 
           def token?(value)
-            User.with_reset_password_token(value) ? true : false
+            (user = User.with_reset_password_token(value)) && user.reset_password_period_valid?
           end
         end
 
