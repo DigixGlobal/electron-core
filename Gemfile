@@ -10,7 +10,7 @@ gem 'pry', '~> 0.12.2'
 gem 'puma', '~> 3.11'
 gem 'rack', '~> 2.0.7'
 gem 'rack-attack', '~> 6.0.0'
-gem 'rack-cors', '~> 1.0.3', require: 'rack/cors'
+gem 'rack-cors', '~> 1.0.5', require: 'rack/cors'
 gem 'rails', '~> 5.2.3'
 
 group :development, :test do
