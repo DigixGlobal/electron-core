@@ -255,7 +255,7 @@ GEM
     mimemagic (0.3.3)
     mini_magick (4.9.5)
     mini_mime (1.0.2)
-    mini_portile2 (2.4.0)
+    mini_portile2 (2.8.0)
     minitest (5.11.3)
     money-tree (0.10.0)
       ffi
@@ -269,8 +269,9 @@ GEM
     net-ssh (5.2.0)
     newrelic_rpm (6.5.0.357)
     nio4r (2.4.0)
-    nokogiri (1.10.4)
-      mini_portile2 (~> 2.4.0)
+    nokogiri (1.13.6)
+      mini_portile2 (~> 2.8.0)
+      racc (~> 1.4)
     orm_adapter (0.5.0)
     postmark (1.15.0)
       json
@@ -283,6 +284,7 @@ GEM
     public_suffix (3.1.1)
     puma (3.12.1)
     raabro (1.1.6)
+    racc (1.6.0)
     rack (2.0.7)
     rack-attack (6.0.0)
       rack (>= 1.0, < 3)
